@@ -20,7 +20,7 @@ const { userLogout } = useStore();
       class="branding flex bg-white flex-col items-center text-secondary"
     >
       <i class="fa-solid fa-right-from-bracket text-2xl"></i>
-      <p class="text-xs">Cerrar sesion</p>
+      <p class="text-xs">Cerrar sesión</p>
     </button>
   </header>
 </template>

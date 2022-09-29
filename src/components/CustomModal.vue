@@ -1,6 +1,8 @@
 <script setup>
 import { useStore } from "@/stores/main";
-// import { storeToRefs } from "pinia";
+import { storeToRefs } from "pinia";
+
+const { currentInvoice } = storeToRefs(useStore());
 
 // const { editInvoice } = storeToRefs(useStore());
 // const { editCurrentInvoice } = useStore();
@@ -8,7 +10,7 @@ import { useStore } from "@/stores/main";
 // const closeModal = () => {
 //   useStore().toggleModal();
 // };
-
+console.log(currentInvoice);
 const closeModal = () => {
   useStore().$patch({
     emailModal: false,
@@ -19,8 +21,13 @@ const closeModal = () => {
 <template>
   <div class="my-modal flex bg-[#1a1a1a]/50">
     <div class="modal-content">
-      <p>La cotizacion fue enviada exitosamente!</p>
-      <div class="my-actions flex gap-2">
+      <p>
+        La cotización fue enviada exitosamente a
+        <span class="text-primary italic">{{
+          currentInvoice.clientEmail
+        }}</span>
+      </p>
+      <div class="my-actions flex gap-2 w-fit mx-auto">
         <!-- <button
           @click="closeModal"
           class="btn bg-[#f2f2f2] text-[#1a1a1a] border-none focus:outline-primary hover:bg-[#f2f2f2] hover:text-primary"
@@ -29,7 +36,7 @@ const closeModal = () => {
         </button> -->
         <button
           @click="closeModal"
-          class="btn bg-primary border-none hover:bg-primary/50 focus:outline-primary"
+          class="btn bg-primary border-none hover:bg-secondary focus:outline-primary"
         >
           Aceptar
         </button>

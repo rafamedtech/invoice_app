@@ -59,7 +59,7 @@ getInvoices();
           <h1 class="lg:text-3xl text-2xl text-primary">Cotizaciones</h1>
           <span class="text-sm"
             >Tienes (<span class="text-primary">{{ invoiceData.length }}</span
-            >) cotizaciones en total</span
+            >) en total</span
           >
         </div>
         <div
@@ -88,7 +88,7 @@ getInvoices();
               <i class="fa-solid fa-plus"></i>
               <!-- <img src="@/assets/images/icon-plus.svg" alt="" /> -->
             </div>
-            <span>Cotizacion</span>
+            <span>Cotización</span>
           </div>
         </div>
       </div>
@@ -105,9 +105,7 @@ getInvoices();
       <div v-else class="empty flex flex-column">
         <img src="@/assets/images/illustration-empty.svg" alt="" />
         <h3>No hay cotizaciones</h3>
-        <p>
-          Crea una nueva cotizacion haciendo click en el boton Nueva Cotizacion
-        </p>
+        <p>Crea una nueva cotización haciendo click en el botón +Cotización</p>
       </div>
     </div>
     <!-- <div v-else>
@@ -154,6 +152,7 @@ getInvoices();
 
         .filter-menu {
           width: 120px;
+          z-index: 999;
           position: absolute;
           top: 25px;
           list-style: none;

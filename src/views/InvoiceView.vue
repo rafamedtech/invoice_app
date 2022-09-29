@@ -5,9 +5,6 @@ import { useRoute, useRouter } from "vue-router";
 
 import emailjs from "@emailjs/browser";
 
-// import html2canvas from "html2canvas";
-// import jspdf from "jspdf";
-
 const router = useRouter();
 // const route = useRoute();
 
@@ -33,34 +30,14 @@ const deleteInvoice = (id) => {
 
 setCurrentInvoice(useRoute().params.invoiceId);
 
-// const generatePDF = () => {
-//   window.html2canvas = html2canvas;
-//   let doc = new jspdf("l", "pt", "legal");
-//   const margin = 20;
-//   const scale =
-//     (doc.internal.pageSize.width - margin * 2) / document.body.scrollWidth;
-//   doc.html(document.querySelector("#pdf-content"), {
-//     x: margin,
-//     y: margin,
-//     html2canvas: {
-//       scale: scale,
-//     },
-//     callback: function (pdf) {
-//       // console.log(pdf);
-//       pdf.save("mypdf.pdf");
-//       // pdf.output("pdfjsnewwindow", { filename: "pdfile.pdf" });
-//     },
-//   });
-// };
-
 const sendEmail = () => {
   emailjs
     .send(
       "gco",
       "template_gw5kvf9",
       {
-        customer_name: currentInvoice.value.clientName,
-        customer_email: "rafa.ravg@gmail.com",
+        customer_name: currentInvoice.value.clientName.split(" ")[0],
+        customer_email: currentInvoice.value.clientEmail,
         message: location.toString(),
       },
       "QyWKNAO42Ukv7v_0T"
@@ -73,9 +50,15 @@ const sendEmail = () => {
         console.log("FAILED...", error.text);
       }
     );
-  useStore().$patch({
-    emailModal: true,
-  });
+  setTimeout(() => {
+    useStore().$patch({
+      emailModal: true,
+    });
+  }, 1000);
+};
+
+const generatePDF = () => {
+  window.print();
 };
 
 // console.log(location.toString());
@@ -133,14 +116,17 @@ const sendEmail = () => {
             v-if="currentInvoice.invoicePending"
             class="btn border-none bg-[#29b385] hover:bg-[#29b385]/50"
           >
-            Marcar como Pagada
+            Marcar Pagada
           </button>
           <button
             v-if="currentInvoice.invoiceDraft || currentInvoice.invoicePaid"
             @click="updateStatusToPending(currentInvoice.docId)"
             class="btn bg-orange-400 border-none hover:bg-secondary"
           >
-            Marcar como Pendiente
+            Marcar Pendiente
+          </button>
+          <button @click="generatePDF" class="btn bg-gray-500 border-none">
+            Crear PDF
           </button>
           <button @click="sendEmail" class="btn bg-gray-500 border-none">
             Enviar
@@ -154,20 +140,30 @@ const sendEmail = () => {
     <!-- <figure class="mb-4 rounded-[20px]" v-if="!user">
       <img class="rounded-[20px]" src="../assets/images/coverdemo.png" alt="" />
     </figure> -->
+    <!-- v-if="!user" -->
+    <div
+      class="lg:print:h-screen lg:print:w-screen print:hidden"
+      :class="{ hidden: user }"
+    >
+      <picture>
+        <source
+          media="(max-width: 767px)"
+          srcset="@/assets/images/coverdemomobile.png"
+        />
+        <img
+          src="@/assets/images/coverdemo.png"
+          srcset="@/assets/images/coverdemo.png"
+          alt=""
+          class="rounded-[20px] mb-4"
+        />
+      </picture>
+    </div>
 
-    <picture>
-      <source
-        media="(max-width: 767px)"
-        srcset="@/assets/images/coverdemomobile.png"
-      />
-      <img
-        v-if="!user"
-        src="@/assets/images/coverdemo.png"
-        srcset="@/assets/images/coverdemo.png"
-        alt=""
-        class="rounded-[20px] mb-4"
-      />
-    </picture>
+    <figure
+      class="hidden print:flex print:mb-36 print:h-full print:items-center"
+    >
+      <img src="@/assets/images/coverdemo.png" alt="" />
+    </figure>
 
     <!-- Invoice body -->
     <div id="pdf-content" class="w-full">
@@ -178,7 +174,7 @@ const sendEmail = () => {
             <span class="text-primary text-xs font-bold"
               >GCO SOLUCIONES <span class="text-secondary">INDUSTRIALES</span>
             </span>
-            <p class="text-[8px] w-[50ch] lg:w-[100ch]">
+            <p class="text-[8px] w-[50ch] lg:w-[70ch]">
               SISTEMAS DE CONTROL ELÉCTRICO, ELECTRÓNICO, NEUMÁTICO,
               AUTOMATIZACIÓN, FILTRACIÓN, CONTROL DE FLAMA, PRESIÓN,
               TEMPERATURA, BOMBEO, TRATAMIENTO DE AGUA Y ALMACENAMIENTO
@@ -204,7 +200,7 @@ const sendEmail = () => {
         <!-- Customer information section -->
         <section class="pb-4 rounded-[20px]">
           <h2 class="w-fit mx-auto border-b-2 border-primary mb-4">
-            Informacion del cliente
+            Información del cliente
           </h2>
 
           <ul class="grid grid-cols-4 px-4 lg:px-8 text-[10px]">
@@ -262,7 +258,7 @@ const sendEmail = () => {
             <tr class="text-xs">
               <th class="bg-white pl-8 py-2 text-primary text-xs">ID</th>
               <th class="bg-white px-4 py-2 text-primary text-xs">
-                Descripcion
+                Descripción
               </th>
               <th class="bg-white px-4 py-2 text-center text-primary text-xs">
                 Cantidad
@@ -317,9 +313,11 @@ const sendEmail = () => {
       </section>
 
       <!-- Terms and total sections -->
-      <section class="pt-4 flex gap-4 flex-col-reverse lg:flex-row w-full">
+      <section
+        class="pt-4 flex gap-4 flex-col-reverse print:flex-row lg:flex-row w-full"
+      >
         <section
-          class="rounded-[20px] flex gap-4 bg-white px-6 py-4 lg:w-4/5 shadow-lg flex-col lg:flex-row w-full"
+          class="rounded-[20px] flex gap-4 bg-white px-6 py-4 lg:w-4/5 shadow-lg flex-col lg:flex-row print:flex-row w-full"
         >
           <div>
             <h3 class="text-[#1a1a1a] border-b-2 border-primary w-fit mb-2">
@@ -338,7 +336,9 @@ const sendEmail = () => {
             <h3 class="text-[#1a1a1a] border-b-2 border-primary w-fit mb-2">
               Notas:
             </h3>
-            <p class="italic text-[8px] w-[100ch]"></p>
+            <p class="italic text-[8px] w-[70ch] print:w-[40-ch] uppercase">
+              {{ currentInvoice.notes }}
+            </p>
           </div>
         </section>
         <section
@@ -363,6 +363,11 @@ const sendEmail = () => {
           </div>
         </section>
       </section>
+    </div>
+    <div class="flex justify-center print:hidden">
+      <button @click="generatePDF" class="btn bg-secondary border-none mt-4">
+        Crear PDF
+      </button>
     </div>
   </main>
 </template>

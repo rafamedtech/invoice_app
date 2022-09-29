@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, computed } from "vue";
 import useVuelidate from "@vuelidate/core";
-import { required, email, minLength } from "@vuelidate/validators";
+import { required, email, minLength, helpers } from "@vuelidate/validators";
 import { useStore } from "@/stores/main";
 
 const { userLogin } = useStore();
@@ -13,8 +13,14 @@ const state = reactive({
 
 const rules = computed(() => {
   return {
-    email: { required, email },
-    password: { required, minLength: minLength(6) },
+    email: {
+      required: helpers.withMessage("Este campo es requerido", required),
+      email: helpers.withMessage("Formato inválido", email),
+    },
+    password: {
+      required: helpers.withMessage("Este campo es requerido", required),
+      minLength: minLength(6),
+    },
   };
 });
 const submitForm = () => {
@@ -29,7 +35,11 @@ const v$ = useVuelidate(rules, state);
       class="container mx-auto flex flex-col lg:gap-8 flex-wrap items-center justify-center px-5 py-24 text-gray-400"
     >
       <figure class="p-4">
-        <img src="../assets/logo.png" alt="" class="h-32 rounded-[20px]" />
+        <img
+          src="../assets/logo-bgremoved.png"
+          alt=""
+          class="h-40 rounded-[20px]"
+        />
       </figure>
       <form
         @submit.prevent="submitForm"
@@ -38,7 +48,7 @@ const v$ = useVuelidate(rules, state);
         <h2
           class="mb-5 text-lg font-medium text-[#1a1a1a] border-b-2 border-primary w-fit"
         >
-          Iniciar sesion
+          Iniciar sesión
         </h2>
         <div class="relative mb-4">
           <label for="full-name" class="text-sm leading-7 text-gray-400"
@@ -55,7 +65,7 @@ const v$ = useVuelidate(rules, state);
                 ' border-red-500 focus:border-red-500': v$.email.$error,
                 'border-[#42d392] ': !v$.email.$invalid,
               }"
-              @input="v$.email.$touch"
+              @change="v$.email.$touch"
               autocomplete="off"
             />
             <!-- <Icon
@@ -75,7 +85,7 @@ const v$ = useVuelidate(rules, state);
         </div>
         <div class="relative mb-4">
           <label for="password" class="text-sm leading-7 text-gray-400"
-            >Password</label
+            >Contraseña</label
           >
           <div class="relative">
             <input
@@ -88,7 +98,7 @@ const v$ = useVuelidate(rules, state);
                 ' border-red-500 focus:border-red-500': v$.password.$error,
                 'border-[#42d392]': !v$.password.$invalid,
               }"
-              @input="v$.password.$touch"
+              @change="v$.password.$touch"
             />
             <!-- <Icon
               v-if="!v$.password.$invalid"
@@ -108,7 +118,7 @@ const v$ = useVuelidate(rules, state);
         <button
           class="rounded border-0 bg-primary py-2 px-8 font-sans font-bold text-white transition-colors duration-500 hover:bg-secondary focus:outline-none"
         >
-          Iniciar sesion
+          Enviar
         </button>
 
         <!-- <p class="mt-3 text-xs">You don't have an account yet?</p>

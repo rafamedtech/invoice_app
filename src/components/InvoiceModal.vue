@@ -14,6 +14,7 @@ const state = reactive({
   loading: null,
   clientName: null,
   clientCompany: null,
+  clientEmail: null,
   invoiceDateUnix: null,
   invoiceDate: null,
   paymentTerms: 1,
@@ -22,6 +23,7 @@ const state = reactive({
   currencyType: "MX",
   exchangeCost: "",
   eta: "Inmediata",
+  notes: null,
   invoicePending: null,
   invoiceDraft: null,
   invoiceItemList: [
@@ -103,9 +105,11 @@ const uploadInvoice = async () => {
     invoiceId: uid(6),
     clientName: state.clientName,
     clientCompany: state.clientCompany,
+    clientEmail: state.clientEmail,
     currencyType: state.currencyType,
     exchangeCost: state.exchangeCost,
     eta: state.eta,
+    notes: state.notes,
     invoiceDate: state.invoiceDate,
     invoiceDateUnix: state.invoiceDateUnix,
     paymentTerms: state.paymentTerms,
@@ -142,12 +146,14 @@ const updateInvoice = async () => {
   await updateDoc(docRef, {
     clientName: state.clientName,
     clientCompany: state.clientCompany,
+    clientEmail: state.clientEmail,
     currencyType: state.currencyType,
     exchangeCost: state.exchangeCost,
     eta: state.eta,
     paymentTerms: state.paymentTerms,
     paymentDueDate: state.paymentDueDate,
     paymentDueDateUnix: state.paymentDueDateUnix,
+    notes: state.notes,
     invoiceItemList: state.invoiceItemList,
     invoiceSubtotal: state.invoiceSubtotal,
     invoiceTax: invoiceTax.value,
@@ -186,6 +192,7 @@ if (editInvoice.value) {
   state.docId = currentInvoice.value.docId;
   state.clientName = currentInvoice.value.clientName;
   state.clientCompany = currentInvoice.value.clientCompany;
+  state.clientEmail = currentInvoice.value.clientEmail;
   state.currencyType = currentInvoice.value.currencyType;
   state.exchangeCost = currentInvoice.value.exchangeCost;
   state.eta = currentInvoice.value.eta;
@@ -194,6 +201,7 @@ if (editInvoice.value) {
   state.paymentTerms = currentInvoice.value.paymentTerms;
   state.paymentDueDateUnix = currentInvoice.value.paymentDueDateUnix;
   state.paymentDueDate = currentInvoice.value.paymentDueDate;
+  state.notes = currentInvoice.value.notes;
   state.invoicePending = currentInvoice.value.invoicePending;
   state.invoiceDraft = currentInvoice.value.invoiceDraft;
   state.invoiceItemList = currentInvoice.value.invoiceItemList;
@@ -230,13 +238,13 @@ watchEffect(() => {
           class="text-2xl text-[#1a1a1a] border-b-2 border-primary w-fit"
           v-if="!editInvoice"
         >
-          Nueva Cotizacion
+          Nueva Cotización
         </h1>
         <h1
           class="text-2xl text-[#1a1a1a] border-b-2 border-primary w-fit"
           v-else
         >
-          Editar Cotizacion
+          Editar Cotización
         </h1>
 
         <!-- Bill To -->
@@ -260,6 +268,16 @@ watchEffect(() => {
               type="text"
               id="clientCompany"
               v-model="state.clientCompany"
+            />
+          </div>
+          <div class="flex flex-column">
+            <label for="clientEmail">Correo electrónico</label>
+            <input
+              class="focus:ring-primary"
+              required
+              type="email"
+              id="clientEmail"
+              v-model="state.clientEmail"
             />
           </div>
 
@@ -287,7 +305,6 @@ watchEffect(() => {
               <label for="exchangeCost">Tipo de cambio</label>
               <input
                 class="focus:ring-primary"
-                required
                 type="text"
                 id="exchangeCost"
                 v-model="state.exchangeCost"
@@ -309,7 +326,7 @@ watchEffect(() => {
               />
             </div>
             <div class="flex flex-column">
-              <label for="paymentDueDate">Dias de vigencia</label>
+              <label for="paymentDueDate">Días de vigencia</label>
               <input
                 class="focus:ring-primary"
                 type="number"
@@ -331,10 +348,10 @@ watchEffect(() => {
           </div>
 
           <div class="work-items mt-8">
-            <h3 class="text-primary mb-4">Articulos</h3>
+            <h3 class="text-primary mb-4">Artículos</h3>
             <table class="item-list">
               <tr class="table-heading flex">
-                <th class="item-name">Descripcion</th>
+                <th class="item-name">Descripción</th>
                 <th class="qty">Qty</th>
                 <th class="price">No. parte</th>
                 <th class="price">Precio</th>
@@ -395,8 +412,17 @@ watchEffect(() => {
               class="flex btn bg-primary/50 hover:bg-secondary border-none gap-2"
             >
               <i class="fa-solid fa-plus"></i>
-              Agregar articulo
+              Agregar artículo
             </div>
+          </div>
+
+          <div class="flex flex-col mt-8">
+            <label for="notes">Notas</label>
+            <textarea
+              id="notes"
+              class="rounded-[16px] border-none focus:ring-primary"
+              v-model="state.notes"
+            ></textarea>
           </div>
         </div>
 
@@ -439,14 +465,14 @@ watchEffect(() => {
               @click="publishInvoice"
               class="btn bg-primary border-none hover:bg-secondary hover:text-white focus:outline-primary"
             >
-              Crear Cotizacion
+              Crear Cotización
             </button>
             <button
               v-if="editInvoice"
               type="sumbit"
               class="btn bg-primary border-none focus:outline-primary hover:bg-secondary"
             >
-              Actualizar Cotizacion
+              Actualizar Cotización
             </button>
           </div>
         </div>

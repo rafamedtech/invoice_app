@@ -45,6 +45,7 @@ export const useStore = defineStore("main", () => {
           clientCompany: doc.data().clientCompany,
           currencyType: doc.data().currencyType,
           exchangeCost: doc.data().exchangeCost,
+          eta: doc.data().eta,
           invoiceDateUnix: doc.data().invoiceDateUnix,
           invoiceDate: doc.data().invoiceDate,
           paymentTerms: doc.data().paymentTerms,

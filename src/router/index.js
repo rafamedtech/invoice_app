@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import InvoiceView from "../views/InvoiceView.vue";
 import { auth } from "@/firebase";
 
 const router = createRouter({
@@ -19,7 +20,8 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import("../views/InvoiceView.vue"),
+      component: InvoiceView,
+      // component: () => import("../views/InvoiceView.vue"),
     },
     {
       path: "/login",

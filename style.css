@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #f2f2f2;
+  }
+
+  th,
+  td {
+    @apply text-xs;
+  }
+}
+
+@layer utilities {
+  .btn {
+    @apply rounded-[1rem];
+  }
+}
+
+/* animated invoice */
+
+.invoice-enter-active,
+.invoice-leave-active {
+  transition: 0.4s ease all;
+}
+
+.invoice-enter-from,
+.invoice-leave-to {
+  transform: translateX(-700px);
+  opacity: 0;
+}

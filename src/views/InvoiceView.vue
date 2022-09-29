@@ -365,7 +365,10 @@ const generatePDF = () => {
       </section>
     </div>
     <div class="flex justify-center print:hidden">
-      <button @click="generatePDF" class="btn bg-secondary border-none mt-4">
+      <button
+        @click="generatePDF"
+        class="btn bg-secondary border-none mt-4 print:hidden"
+      >
         Crear PDF
       </button>
     </div>

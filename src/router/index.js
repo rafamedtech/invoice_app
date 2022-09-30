@@ -64,6 +64,11 @@ router.beforeEach((to, from, next) => {
 
 router.beforeEach((to, from, next) => {
   // console.log(to);
+  if (to.path === "/" || to.path === "/login") {
+    document.title = "GCO Soluciones Industriales";
+    next();
+    return;
+  }
   document.title = `Cotización #${to.params.invoiceId} | GCO Soluciones Industriales`;
   next();
 });

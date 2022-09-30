@@ -63,7 +63,7 @@ router.beforeEach((to, from, next) => {
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(to);
+  // console.log(to);
   document.title = `Cotización #${to.params.invoiceId} | GCO Soluciones Industriales`;
   next();
 });

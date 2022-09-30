@@ -80,7 +80,7 @@ const generatePDF = () => {
         <i class="fa-solid fa-chevron-left text-primary"></i> Regresar
       </router-link>
       <!-- Header -->
-      <div v-if="user" class="header flex shadow-lg gap-4">
+      <div v-if="user" class="header flex flex-col lg:flex-row shadow-lg gap-4">
         <div class="left flex flex-col lg:flex-row gap-2">
           <span>Etapa</span>
           <div
@@ -98,37 +98,51 @@ const generatePDF = () => {
         </div>
 
         <!-- Status bar -->
-        <div class="right flex gap-2 flex-col lg:flex-row flex-wrap">
+        <div class="right flex justify-center gap-4 items-center">
           <button
             @click="toggleEditInvoice"
-            class="btn border-none hover:opacity-50"
+            class="bg-[#f2f2f2] px-2 py-8 text-[#1a1a1a] border-none hover:shadow-lg transition-all lg:text-[10px] hover:-translate-y-[1px] flex flex-col items-center gap-2 text-[9px] justify-center h-14 rounded-[10px] w-14"
           >
+            <i class="fa-regular fa-pen-to-square text-base"></i>
             Editar
           </button>
           <button
             @click="deleteInvoice(currentInvoice.docId)"
-            class="btn bg-primary border-none hover:bg-primary/50"
+            class="bg-[#f2f2f2] px-2 py-8 text-[#1a1a1a] border-none hover:shadow-lg transition-all lg:text-[10px] hover:-translate-y-[1px] flex flex-col items-center gap-2 text-[9px] justify-center h-14 rounded-[10px] w-14"
           >
+            <i class="fa-solid fa-trash-can text-primary text-base"></i>
             Eliminar
           </button>
           <button
             @click="updateStatusToPaid(currentInvoice.docId)"
             v-if="currentInvoice.invoicePending"
-            class="btn border-none bg-[#29b385] hover:bg-[#29b385]/50"
+            class="bg-[#f2f2f2] px-2 py-8 text-[#1a1a1a] border-none hover:shadow-lg transition-all lg:text-[10px] hover:-translate-y-[1px] flex flex-col items-center gap-0 text-[9px] justify-center h-14 rounded-[10px] w-14"
           >
+            <i class="fa-regular fa-circle-check text-green-500 text-base"></i>
             Marcar Pagada
           </button>
           <button
             v-if="currentInvoice.invoiceDraft || currentInvoice.invoicePaid"
             @click="updateStatusToPending(currentInvoice.docId)"
-            class="btn bg-orange-400 border-none hover:bg-secondary"
+            class="bg-[#f2f2f2] px-2 py-8 text-[#1a1a1a] border-none hover:shadow-lg transition-all lg:text-[10px] hover:-translate-y-[1px] flex flex-col items-center gap-2 text-[9px] justify-center h-14 rounded-[10px] w-14"
           >
+            <i
+              class="fa-solid fa-circle-exclamation text-secondary text-base"
+            ></i>
             Marcar Pendiente
           </button>
-          <button @click="generatePDF" class="btn bg-gray-500 border-none">
+          <button
+            @click="generatePDF"
+            class="bg-[#f2f2f2] px-2 py-8 text-[#1a1a1a] border-none hover:shadow-lg transition-all lg:text-[10px] hover:-translate-y-[1px] flex flex-col items-center gap-0 text-[9px] justify-center h-14 rounded-[10px] w-14"
+          >
+            <i class="fa-solid fa-file-pdf text-base"></i>
             Crear PDF
           </button>
-          <button @click="sendEmail" class="btn bg-gray-500 border-none">
+          <button
+            @click="sendEmail"
+            class="bg-[#f2f2f2] px-2 py-8 text-[#1a1a1a] border-none hover:shadow-lg transition-all lg:text-[10px] hover:-translate-y-[1px] flex flex-col items-center gap-2 text-[9px] justify-center h-14 rounded-[10px] w-14"
+          >
+            <i class="fa-regular fa-paper-plane text-blue-500 text-base"></i>
             Enviar
           </button>
         </div>
@@ -137,10 +151,6 @@ const generatePDF = () => {
 
     <!-- Cover -->
 
-    <!-- <figure class="mb-4 rounded-[20px]" v-if="!user">
-      <img class="rounded-[20px]" src="../assets/images/coverdemo.png" alt="" />
-    </figure> -->
-    <!-- v-if="!user" -->
     <div
       class="lg:print:h-screen lg:print:w-screen print:hidden"
       :class="{ hidden: user }"
@@ -169,7 +179,7 @@ const generatePDF = () => {
     <div id="pdf-content" class="w-full">
       <section class="rounded-[20px] bg-white pt-4 shadow-lg">
         <section class="h-full flex justify-between px-4 lg:px-8 relative">
-          <div class="h-fit">
+          <div class="h-fit mb-4">
             <img class="mb-2 h-28" src="@/assets/logo.png" />
             <span class="text-primary text-xs font-bold"
               >GCO SOLUCIONES <span class="text-secondary">INDUSTRIALES</span>
@@ -189,10 +199,10 @@ const generatePDF = () => {
             <!-- <h3 class="text-primary">Cotización</h3> -->
             <p class="font-bold">#{{ currentInvoice.invoiceId }}</p>
 
-            <h3 class="text-primary text-[10px] lg:text-base">Fecha</h3>
+            <h3 class="text-primary text-[9px] lg:text-base">Fecha</h3>
             <p class="text-xs">{{ currentInvoice.invoiceDate }}</p>
 
-            <h3 class="text-primary text-[10px] lg:text-base">Vigencia</h3>
+            <h3 class="text-primary text-[9px] lg:text-base">Vigencia</h3>
             <p class="text-xs">{{ currentInvoice.paymentDueDate }}</p>
           </div>
         </section>
@@ -203,10 +213,10 @@ const generatePDF = () => {
             Información del cliente
           </h2>
 
-          <ul class="grid grid-cols-4 px-4 lg:px-8 text-[10px]">
+          <ul class="grid grid-cols-4 px-4 lg:px-8 text-[9px]">
             <li class="text-center">
               <h3
-                class="border-b border-black text-primary text-[10px] lg:text-base"
+                class="border-b border-black text-primary text-[9px] lg:text-base"
               >
                 Nombre
               </h3>
@@ -216,7 +226,7 @@ const generatePDF = () => {
             </li>
             <li class="text-center">
               <h3
-                class="border-b border-black text-primary text-[10px] lg:text-base"
+                class="border-b border-black text-primary text-[9px] lg:text-base"
               >
                 Empresa
               </h3>
@@ -226,7 +236,7 @@ const generatePDF = () => {
             </li>
             <li class="text-center">
               <h3
-                class="border-b border-black text-primary text-[10px] lg:text-base"
+                class="border-b border-black text-primary text-[9px] lg:text-base"
               >
                 Moneda
               </h3>
@@ -236,7 +246,7 @@ const generatePDF = () => {
             </li>
             <li class="text-center">
               <h3
-                class="border-b border-black text-primary text-[10px] lg:text-base"
+                class="border-b border-black text-primary text-[9px] lg:text-base"
               >
                 Tipo de cambio
               </h3>
@@ -364,11 +374,12 @@ const generatePDF = () => {
         </section>
       </section>
     </div>
-    <div class="flex justify-center print:hidden">
+    <div class="flex justify-center print:hidden" v-if="!user">
       <button
         @click="generatePDF"
-        class="btn bg-secondary border-none mt-4 print:hidden"
+        class="bg-primary px-10 py-6 text-white flex-row border-none hover:shadow-lg transition-all text-xs hover:-translate-y-[1px] flex items-center gap-2 justify-center h-14 rounded-[10px] w-14 mt-8"
       >
+        <i class="fa-solid fa-file-pdf text-lg"></i>
         Crear PDF
       </button>
     </div>
@@ -415,9 +426,9 @@ const generatePDF = () => {
       flex: 1;
       justify-content: flex-end;
 
-      button {
-        color: #fff;
-      }
+      // button {
+      //   color: #fff;
+      // }
     }
   }
 

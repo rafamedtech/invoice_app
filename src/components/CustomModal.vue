@@ -20,7 +20,7 @@ const closeModal = () => {
 
 <template>
   <div class="my-modal flex bg-[#1a1a1a]/50">
-    <div class="modal-content">
+    <div class="modal-content margin-2">
       <p>
         La cotización fue enviada exitosamente a
         <span class="text-primary italic">{{
@@ -57,6 +57,7 @@ const closeModal = () => {
   .modal-content {
     border-radius: 20px;
     padding: 48px 32px;
+    margin: 1rem;
     max-width: 450px;
     background-color: #fff;
     color: #1a1a1a;

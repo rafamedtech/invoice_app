@@ -1,42 +1,55 @@
 <script setup>
+// Imports
 import { useStore } from "@/stores/main";
 import { storeToRefs } from "pinia";
 
-const { currentInvoice } = storeToRefs(useStore());
+// Definitions
+const { currentInvoice, modalType } = storeToRefs(useStore());
+const { deleteCurrentInvoice } = useStore();
 
-// const { editInvoice } = storeToRefs(useStore());
-// const { editCurrentInvoice } = useStore();
-
-// const closeModal = () => {
-//   useStore().toggleModal();
-// };
-console.log(currentInvoice);
 const closeModal = () => {
   useStore().$patch({
-    emailModal: false,
+    customModal: false,
   });
+};
+
+const deleteInvoice = () => {
+  deleteCurrentInvoice(currentInvoice.value.docId);
+  closeModal();
 };
 </script>
 
 <template>
   <div class="my-modal flex bg-[#1a1a1a]/50">
     <div class="modal-content margin-2">
-      <p>
+      <p v-if="modalType === 'email'">
         La cotización fue enviada exitosamente a
-        <span class="text-primary italic">{{
+        <span class="italic text-primary">{{
           currentInvoice.clientEmail
         }}</span>
       </p>
-      <div class="my-actions flex gap-2 w-fit mx-auto">
-        <!-- <button
-          @click="closeModal"
-          class="btn bg-[#f2f2f2] text-[#1a1a1a] border-none focus:outline-primary hover:bg-[#f2f2f2] hover:text-primary"
-        >
-          Return
-        </button> -->
+      <p v-else>¿Seguro que quieres eliminar la cotización?</p>
+      <div
+        v-if="modalType === 'email'"
+        class="my-actions mx-auto flex w-fit gap-2"
+      >
         <button
           @click="closeModal"
-          class="btn bg-primary border-none hover:bg-secondary focus:outline-primary"
+          class="btn border-none bg-primary hover:bg-secondary focus:outline-primary"
+        >
+          Aceptar
+        </button>
+      </div>
+      <div v-else class="my-actions mx-auto flex w-full gap-2">
+        <button
+          @click="closeModal"
+          class="btn border-none bg-[#f2f2f2] text-[#1a1a1a] hover:bg-[#f2f2f2] hover:text-primary focus:outline-primary"
+        >
+          Regresar
+        </button>
+        <button
+          @click="deleteInvoice"
+          class="btn border-none bg-primary hover:bg-secondary focus:outline-primary"
         >
           Aceptar
         </button>

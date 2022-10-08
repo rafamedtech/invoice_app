@@ -1,6 +1,6 @@
 <script setup>
 import { RouterView } from "vue-router";
-import { ref } from "vue";
+// import { ref } from "vue";
 import { useStore } from "@/stores/main";
 import { storeToRefs } from "pinia";
 
@@ -9,27 +9,25 @@ import InvoiceModal from "./components/InvoiceModal.vue";
 import MyModal from "./components/MyModal.vue";
 import CustomModal from "./components/CustomModal.vue";
 
-const { invoiceDialog, modalActive, emailModal, invoicesLoaded, user } =
+const { invoiceDialog, modalActive, customModal, invoicesLoaded, user } =
   storeToRefs(useStore());
 const { getInvoices, fetchUser } = useStore();
 
-const mobile = ref(null);
+// const mobile = ref(null);
 
-const checkScreen = () => {
-  const windowWidth = window.innerWidth;
+// const checkScreen = () => {
+//   const windowWidth = window.innerWidth;
 
-  if (windowWidth <= 750) {
-    mobile.value = true;
-    return;
-  }
+//   if (windowWidth <= 750) {
+//     mobile.value = true;
+//     return;
+//   }
 
-  mobile.value = false;
-};
+//   mobile.value = false;
+// };
 
-checkScreen();
-// watchEffect(() => {
-//   window.addEventListener('resize', checkScreen());
-// });
+// checkScreen();
+
 getInvoices();
 
 fetchUser();
@@ -37,22 +35,21 @@ fetchUser();
 
 <template>
   <div v-if="invoicesLoaded">
-    <div class="app flex flex-column">
-      <!-- <div v-if="!mobile" class="app flex flex-column"> -->
+    <div class="app flex-column flex">
       <NavBar v-if="user" />
-      <div class="app-content flex flex-column">
+      <div class="app-content flex-column flex">
         <MyModal v-if="modalActive" />
-        <CustomModal v-if="emailModal" />
-        <Transition name="invoice">
+        <CustomModal v-if="customModal" />
+        <transition name="invoice">
           <InvoiceModal v-if="invoiceDialog" />
-        </Transition>
-        <RouterView class="lg:pl-[100px]" />
+        </transition>
+        <RouterView v-slot="{ Component }">
+          <transition name="page" mode="out-in">
+            <Component :is="Component" />
+          </transition>
+        </RouterView>
       </div>
     </div>
-    <!-- <div v-else class="mobile-message flex flex-column">
-      <h2>Sorry, this app is not supported on Mobile devices</h2>
-      <p>To use this app, please use a computer or Tablet</p>
-    </div> -->
   </div>
 </template>
 
@@ -105,6 +102,26 @@ fetchUser();
 .invoice-leave-to {
   transform: translateX(-700px);
 }
+// .page-move,
+.page-enter-active,
+.page-leave-active {
+  transition: 0.4s ease-out all;
+}
+
+.page-enter-from {
+  transform: translateX(-30px);
+  opacity: 0;
+}
+.page-leave-to {
+  transform: translateX(30px);
+  opacity: 0;
+}
+
+// .page-enter-from,
+// .page-leave-to {
+//   transform: translateX(20px);
+//   opacity: 0;
+// }
 
 // button,
 // .button {
@@ -153,8 +170,13 @@ fetchUser();
   max-width: 850px;
   margin: 0 auto;
 
+  @media (min-width: 768px) {
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+
   @media (min-width: 900px) {
-    padding-top: 72px;
+    padding: 72px 10px 40px 10px;
   }
 }
 
@@ -173,9 +195,15 @@ fetchUser();
     border-radius: 50%;
     // margin-right: 8px;
   }
+  @media (min-width: 900px) {
+    width: 10rem;
+    justify-content: center;
+  }
   font-size: 12px;
   // margin-right: 30px;
   align-items: center;
+  // margin: 0 auto;
+  // text-align: center;
   // padding: 8px 30px;
   border-radius: 10px;
 }

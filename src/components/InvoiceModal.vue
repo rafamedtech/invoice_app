@@ -226,31 +226,31 @@ watchEffect(() => {
   <div
     @click="checkClick"
     ref="invoiceWrap"
-    class="invoice-wrap flex flex-column z-50 bg-[#1a1a1a]/50 w-[200vw]"
+    class="invoice-wrap flex-column z-50 flex w-[300vw] bg-[#1a1a1a]/50 lg:w-[200vw]"
   >
     <Transition name="invoice">
       <form
         @submit.prevent="submitForm"
-        class="invoice-content w-screen lg:max-w-3xl px-4 pt-40 pb-14 lg:p-14"
+        class="invoice-content w-screen px-4 pt-40 pb-14 lg:max-w-3xl lg:p-14"
       >
         <LoadingSpinner v-show="state.loading" />
         <h1
-          class="text-2xl text-[#1a1a1a] border-b-2 border-primary w-fit"
+          class="w-fit border-b-2 border-primary text-2xl text-[#1a1a1a]"
           v-if="!editInvoice"
         >
           Nueva Cotización
         </h1>
         <h1
-          class="text-2xl text-[#1a1a1a] border-b-2 border-primary w-fit"
+          class="w-fit border-b-2 border-primary text-2xl text-[#1a1a1a]"
           v-else
         >
           Editar Cotización
         </h1>
 
         <!-- Bill To -->
-        <div class="bill-to flex flex-column gap-4">
+        <div class="bill-to flex-column flex gap-4">
           <h4 class="text-primary">Datos generales</h4>
-          <div class="flex flex-column">
+          <div class="flex-column flex">
             <label for="clientName">Nombre del cliente</label>
             <input
               class="focus:ring-primary"
@@ -260,7 +260,7 @@ watchEffect(() => {
               v-model="state.clientName"
             />
           </div>
-          <div class="flex flex-column">
+          <div class="flex-column flex">
             <label for="clientCompany">Empresa</label>
             <input
               class="focus:ring-primary"
@@ -270,7 +270,7 @@ watchEffect(() => {
               v-model="state.clientCompany"
             />
           </div>
-          <div class="flex flex-column">
+          <div class="flex-column flex">
             <label for="clientEmail">Correo electrónico</label>
             <input
               class="focus:ring-primary"
@@ -282,7 +282,7 @@ watchEffect(() => {
           </div>
 
           <div class="location-details flex">
-            <div class="flex flex-column">
+            <div class="flex-column flex">
               <label for="currencyType">Moneda</label>
               <!-- <input
                 class="focus:ring-primary"
@@ -301,7 +301,7 @@ watchEffect(() => {
                 <option value="USD">USD</option>
               </select>
             </div>
-            <div class="flex flex-column">
+            <div class="flex-column flex">
               <label for="exchangeCost">Tipo de cambio</label>
               <input
                 class="focus:ring-primary"
@@ -314,9 +314,9 @@ watchEffect(() => {
         </div>
 
         <!-- Invoice Work Details -->
-        <div class="invoice-work flex flex-column">
+        <div class="invoice-work flex-column flex">
           <div class="payment flex">
-            <div class="flex flex-column">
+            <div class="flex-column flex">
               <label for="invoiceDate">Fecha</label>
               <input
                 disabled
@@ -325,7 +325,7 @@ watchEffect(() => {
                 v-model="state.invoiceDate"
               />
             </div>
-            <div class="flex flex-column">
+            <div class="flex-column flex">
               <label for="paymentDueDate">Días de vigencia</label>
               <input
                 class="focus:ring-primary"
@@ -335,8 +335,13 @@ watchEffect(() => {
               />
               <!-- v-model="state.paymentDueDate" -->
             </div>
-            <div class="flex flex-column">
-              <label for="paymentDueDate">Tiempo de entrega</label>
+            <div class="flex-column flex">
+              <label
+                for="paymentDueDate"
+                class="mb-[6px] text-[10px] lg:text-[12px]"
+                data-label="entrega"
+                >Tiempo de entrega</label
+              >
               <input
                 class="focus:ring-primary"
                 type="text"
@@ -348,18 +353,18 @@ watchEffect(() => {
           </div>
 
           <div class="work-items mt-8">
-            <h3 class="text-primary mb-4">Artículos</h3>
+            <h3 class="mb-4 text-primary">Artículos</h3>
             <table class="item-list">
               <tr class="table-heading flex">
                 <th class="item-name">Descripción</th>
-                <th class="qty">Qty</th>
+                <th class="qty">Ctd</th>
                 <th class="price">No. parte</th>
                 <th class="price">Precio</th>
                 <th class="total">Total</th>
               </tr>
               <div v-auto-animate>
                 <tr
-                  class="table-items gap-[10px] lg:gap-4 flex"
+                  class="table-items flex gap-[10px] lg:gap-4"
                   v-for="(item, index) in state.invoiceItemList"
                   :key="index"
                 >
@@ -391,7 +396,7 @@ watchEffect(() => {
                       v-model="item.price"
                     />
                   </td>
-                  <td class="total flex justify-center">
+                  <td class="total flex">
                     ${{
                       parseFloat((item.total = item.qty * item.price)).toFixed(
                         2
@@ -400,7 +405,7 @@ watchEffect(() => {
                   </td>
                   <i
                     @click="deleteInvoiceItem(item.id)"
-                    class="fa-solid fa-trash text-primary text-base m-auto cursor-pointer"
+                    class="fa-solid fa-trash absolute -top-5 right-0 m-auto cursor-pointer text-base text-primary"
                     title="Borrar artículo"
                   ></i>
                 </tr>
@@ -409,14 +414,14 @@ watchEffect(() => {
 
             <div
               @click="addNewInvoiceItem"
-              class="flex btn bg-primary/50 hover:bg-secondary border-none gap-2"
+              class="btn flex gap-2 border-none bg-primary/50 hover:bg-secondary"
             >
               <i class="fa-solid fa-plus"></i>
               Agregar artículo
             </div>
           </div>
 
-          <div class="flex flex-col mt-8">
+          <div class="mt-8 flex flex-col">
             <label for="notes">Notas</label>
             <textarea
               id="notes"
@@ -440,22 +445,22 @@ watchEffect(() => {
         </section> -->
 
         <!-- Save/Exit -->
-        <div class="save flex flex-col lg:flex-row gap-2">
+        <div class="save flex flex-col gap-2 lg:flex-row">
           <div class="left">
             <button
               type="button"
               @click="closeInvoice"
-              class="btn bg-white w-full lg:w-auto text-primary border-none hover:bg-secondary hover:text-white focus:outline-primary"
+              class="btn w-full border-none bg-white text-primary hover:bg-secondary hover:text-white focus:outline-primary lg:w-auto"
             >
               Cancelar
             </button>
           </div>
-          <div class="right flex gap-2 flex-col lg:flex-row">
+          <div class="right flex flex-col gap-2 lg:flex-row">
             <button
               v-if="!editInvoice"
               type="submit"
               @click="saveDraft"
-              class="btn bg-gray-200 text-secondary border-none hover:bg-secondary hover:text-white focus:outline-primary"
+              class="btn border-none bg-gray-200 text-secondary hover:bg-secondary hover:text-white focus:outline-primary"
             >
               Guardar Borrador
             </button>
@@ -463,14 +468,14 @@ watchEffect(() => {
               v-if="!editInvoice"
               type="submit"
               @click="publishInvoice"
-              class="btn bg-primary border-none hover:bg-secondary hover:text-white focus:outline-primary"
+              class="btn border-none bg-primary hover:bg-secondary hover:text-white focus:outline-primary"
             >
               Crear Cotización
             </button>
             <button
               v-if="editInvoice"
               type="sumbit"
-              class="btn bg-primary border-none focus:outline-primary hover:bg-secondary"
+              class="btn border-none bg-primary hover:bg-secondary focus:outline-primary"
             >
               Actualizar Cotización
             </button>
@@ -498,7 +503,7 @@ watchEffect(() => {
   position: fixed;
   top: 0;
   left: 0;
-  // width: 100%;
+  // width: 300vw;
   height: 100vh;
   overflow: scroll;
   &::-webkit-scrollbar {
@@ -565,7 +570,7 @@ watchEffect(() => {
           // Item Table Styling
           .table-heading,
           .table-items {
-            // gap: 16px;
+            gap: 16px;
             // font-size: 12px;
 
             .item-name {
@@ -576,7 +581,11 @@ watchEffect(() => {
             }
 
             .qty {
-              flex-basis: 10%;
+              flex-basis: 15%;
+
+              @media (min-width: 768px) {
+                flex-basis: 10%;
+              }
             }
 
             .price {
@@ -642,7 +651,7 @@ watchEffect(() => {
     margin-bottom: 24px;
   }
 
-  label {
+  label:not([data-label="entrega"]) {
     font-size: 12px;
     margin-bottom: 6px;
     // background-color: transparent !important;

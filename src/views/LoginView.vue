@@ -120,13 +120,6 @@ const v$ = useVuelidate(rules, state);
         >
           Enviar
         </button>
-
-        <!-- <p class="mt-3 text-xs">You don't have an account yet?</p>
-        <nuxt-link
-          class="w-fit text-sm text-[#aac8e4] hover:text-[#42b883]"
-          to="/register"
-          >Register</nuxt-link
-        > -->
       </form>
     </section>
   </main>

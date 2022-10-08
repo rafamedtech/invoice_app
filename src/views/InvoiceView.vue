@@ -1,19 +1,18 @@
 <script setup>
 import { useStore } from "@/stores/main";
 import { storeToRefs } from "pinia";
-import { useRoute, useRouter } from "vue-router";
-
+import { useRoute } from "vue-router";
+// import { useRoute, useRouter } from "vue-router";
 import emailjs from "@emailjs/browser";
 
-const router = useRouter();
-// const route = useRoute();
+// const router = useRouter();
+const { params } = useRoute();
 
 const { currentInvoice, user } = storeToRefs(useStore());
 const {
   setCurrentInvoice,
   editCurrentInvoice,
   toggleInvoice,
-  deleteCurrentInvoice,
   updateStatusToPaid,
   updateStatusToPending,
 } = useStore();
@@ -23,12 +22,14 @@ const toggleEditInvoice = () => {
   toggleInvoice();
 };
 
-const deleteInvoice = (id) => {
-  deleteCurrentInvoice(id);
-  router.push("/");
+const deleteInvoice = () => {
+  useStore().$patch({
+    customModal: true,
+    modalType: "delete",
+  });
 };
 
-setCurrentInvoice(useRoute().params.invoiceId);
+setCurrentInvoice(params.invoiceId);
 
 const sendEmail = () => {
   emailjs
@@ -50,23 +51,26 @@ const sendEmail = () => {
         console.log("FAILED...", error.text);
       }
     );
+
   setTimeout(() => {
     useStore().$patch({
-      emailModal: true,
+      customModal: true,
+      modalType: "email",
     });
+    if (currentInvoice.value.invoiceDraft) {
+      updateStatusToPending(currentInvoice.value.docId);
+    }
   }, 1000);
 };
 
 const generatePDF = () => {
   window.print();
 };
-
-// console.log(location.toString());
 </script>
 
 <template>
   <main
-    class="min-h-screen max-w-screen-xl print:px-10 pt-2 pb-6 px-4 lg:px-10 mx-auto bg-[#F2F2F2] w-full relative"
+    class="relative mx-auto min-h-screen w-full max-w-screen-xl bg-[#F2F2F2] px-4 pt-2 pb-6 print:px-10 lg:px-10"
   >
     <div
       v-if="currentInvoice"
@@ -80,11 +84,11 @@ const generatePDF = () => {
         <i class="fa-solid fa-chevron-left text-primary"></i> Regresar
       </router-link>
       <!-- Header -->
-      <div v-if="user" class="header flex flex-col lg:flex-row shadow-lg gap-4">
-        <div class="left flex flex-col lg:flex-row gap-2">
+      <div v-if="user" class="header flex flex-col gap-4 shadow-lg lg:flex-row">
+        <div class="left flex flex-col gap-2 lg:flex-row">
           <span>Etapa</span>
           <div
-            class="status-button py-2 px-4 lg:mr-2 lg:px-8 flex gap-2"
+            class="status-button flex gap-2 py-2 px-4 lg:mr-2 lg:px-8"
             :class="{
               paid: currentInvoice.invoicePaid,
               draft: currentInvoice.invoiceDraft,
@@ -98,51 +102,51 @@ const generatePDF = () => {
         </div>
 
         <!-- Status bar -->
-        <div class="right flex justify-center gap-4 items-center">
+        <div class="right flex items-center justify-center gap-3">
           <button
             @click="toggleEditInvoice"
-            class="bg-[#f2f2f2] px-2 py-8 text-[#1a1a1a] border-none hover:shadow-lg transition-all lg:text-[10px] hover:-translate-y-[1px] flex flex-col items-center gap-2 text-[9px] justify-center h-14 rounded-[10px] w-14"
+            class="flex h-14 w-14 flex-col items-center justify-center gap-2 rounded-[10px] border-none bg-[#f2f2f2] px-2 py-8 text-[9px] text-[#1a1a1a] transition-all hover:-translate-y-[1px] hover:shadow-lg lg:text-[10px]"
           >
             <i class="fa-regular fa-pen-to-square text-base"></i>
             Editar
           </button>
           <button
-            @click="deleteInvoice(currentInvoice.docId)"
-            class="bg-[#f2f2f2] px-2 py-8 text-[#1a1a1a] border-none hover:shadow-lg transition-all lg:text-[10px] hover:-translate-y-[1px] flex flex-col items-center gap-2 text-[9px] justify-center h-14 rounded-[10px] w-14"
+            @click="deleteInvoice()"
+            class="flex h-14 w-14 flex-col items-center justify-center gap-2 rounded-[10px] border-none bg-[#f2f2f2] px-2 py-8 text-[9px] text-[#1a1a1a] transition-all hover:-translate-y-[1px] hover:shadow-lg lg:text-[10px]"
           >
-            <i class="fa-solid fa-trash-can text-primary text-base"></i>
+            <i class="fa-solid fa-trash-can text-base text-primary"></i>
             Eliminar
           </button>
           <button
             @click="updateStatusToPaid(currentInvoice.docId)"
             v-if="currentInvoice.invoicePending"
-            class="bg-[#f2f2f2] px-2 py-8 text-[#1a1a1a] border-none hover:shadow-lg transition-all lg:text-[10px] hover:-translate-y-[1px] flex flex-col items-center gap-0 text-[9px] justify-center h-14 rounded-[10px] w-14"
+            class="flex h-14 w-14 flex-col items-center justify-center gap-0 rounded-[10px] border-none bg-[#f2f2f2] px-2 py-8 text-[9px] text-[#1a1a1a] transition-all hover:-translate-y-[1px] hover:shadow-lg lg:text-[10px]"
           >
-            <i class="fa-regular fa-circle-check text-green-500 text-base"></i>
+            <i class="fa-regular fa-circle-check text-base text-green-500"></i>
             Marcar Pagada
           </button>
           <button
             v-if="currentInvoice.invoiceDraft || currentInvoice.invoicePaid"
             @click="updateStatusToPending(currentInvoice.docId)"
-            class="bg-[#f2f2f2] px-2 py-8 text-[#1a1a1a] border-none hover:shadow-lg transition-all lg:text-[10px] hover:-translate-y-[1px] flex flex-col items-center gap-2 text-[9px] justify-center h-14 rounded-[10px] w-14"
+            class="flex h-14 w-14 flex-col items-center justify-center gap-0 rounded-[10px] border-none bg-[#f2f2f2] px-2 py-8 text-[9px] text-[#1a1a1a] transition-all hover:-translate-y-[1px] hover:shadow-lg lg:text-[10px]"
           >
             <i
-              class="fa-solid fa-circle-exclamation text-secondary text-base"
+              class="fa-solid fa-circle-exclamation text-base text-secondary"
             ></i>
             Marcar Pendiente
           </button>
           <button
             @click="generatePDF"
-            class="bg-[#f2f2f2] px-2 py-8 text-[#1a1a1a] border-none hover:shadow-lg transition-all lg:text-[10px] hover:-translate-y-[1px] flex flex-col items-center gap-0 text-[9px] justify-center h-14 rounded-[10px] w-14"
+            class="flex h-14 w-14 flex-col items-center justify-center gap-0 rounded-[10px] border-none bg-[#f2f2f2] px-2 py-8 text-[9px] text-[#1a1a1a] transition-all hover:-translate-y-[1px] hover:shadow-lg lg:text-[10px]"
           >
             <i class="fa-solid fa-file-pdf text-base"></i>
             Crear PDF
           </button>
           <button
             @click="sendEmail"
-            class="bg-[#f2f2f2] px-2 py-8 text-[#1a1a1a] border-none hover:shadow-lg transition-all lg:text-[10px] hover:-translate-y-[1px] flex flex-col items-center gap-2 text-[9px] justify-center h-14 rounded-[10px] w-14"
+            class="flex h-14 w-14 flex-col items-center justify-center gap-2 rounded-[10px] border-none bg-[#f2f2f2] px-2 py-8 text-[9px] text-[#1a1a1a] transition-all hover:-translate-y-[1px] hover:shadow-lg lg:text-[10px]"
           >
-            <i class="fa-regular fa-paper-plane text-blue-500 text-base"></i>
+            <i class="fa-regular fa-paper-plane text-base text-blue-500"></i>
             Enviar
           </button>
         </div>
@@ -152,7 +156,7 @@ const generatePDF = () => {
     <!-- Cover -->
 
     <div
-      class="lg:print:h-screen lg:print:w-screen print:hidden"
+      class="print:hidden lg:print:h-screen lg:print:w-screen"
       :class="{ hidden: user }"
     >
       <picture>
@@ -164,13 +168,13 @@ const generatePDF = () => {
           src="@/assets/images/coverdemo.png"
           srcset="@/assets/images/coverdemo.png"
           alt=""
-          class="rounded-[20px] mb-4"
+          class="mb-4 rounded-[20px]"
         />
       </picture>
     </div>
 
     <figure
-      class="hidden print:flex print:mb-36 print:h-full print:items-center"
+      class="hidden print:mb-36 print:flex print:h-full print:items-center"
     >
       <img src="@/assets/images/coverdemo.png" alt="" />
     </figure>
@@ -178,20 +182,20 @@ const generatePDF = () => {
     <!-- Invoice body -->
     <div id="pdf-content" class="w-full">
       <section class="rounded-[20px] bg-white pt-4 shadow-lg">
-        <section class="h-full flex justify-between px-4 lg:px-8 relative">
-          <div class="h-fit mb-4">
+        <section class="relative flex h-full justify-between px-4 lg:px-8">
+          <div class="mb-4 h-fit">
             <img class="mb-2 h-28" src="@/assets/logo.png" />
-            <span class="text-primary text-xs font-bold"
+            <span class="text-xs font-bold text-primary"
               >GCO SOLUCIONES <span class="text-secondary">INDUSTRIALES</span>
             </span>
-            <p class="text-[8px] w-[50ch] lg:w-[70ch]">
+            <p class="w-[50ch] text-[8px] lg:w-[70ch]">
               SISTEMAS DE CONTROL ELÉCTRICO, ELECTRÓNICO, NEUMÁTICO,
               AUTOMATIZACIÓN, FILTRACIÓN, CONTROL DE FLAMA, PRESIÓN,
               TEMPERATURA, BOMBEO, TRATAMIENTO DE AGUA Y ALMACENAMIENTO
             </p>
           </div>
           <h1
-            class="absolute hidden lg:block inset-0 top-2 text-primary text-xl font-bold italic uppercase text-center"
+            class="absolute inset-0 top-2 hidden text-center text-xl font-bold uppercase italic text-primary lg:block"
           >
             Cotización
           </h1>
@@ -199,58 +203,58 @@ const generatePDF = () => {
             <!-- <h3 class="text-primary">Cotización</h3> -->
             <p class="font-bold">#{{ currentInvoice.invoiceId }}</p>
 
-            <h3 class="text-primary text-[9px] lg:text-base">Fecha</h3>
+            <h3 class="text-[9px] text-primary lg:text-base">Fecha</h3>
             <p class="text-xs">{{ currentInvoice.invoiceDate }}</p>
 
-            <h3 class="text-primary text-[9px] lg:text-base">Vigencia</h3>
+            <h3 class="text-[9px] text-primary lg:text-base">Vigencia</h3>
             <p class="text-xs">{{ currentInvoice.paymentDueDate }}</p>
           </div>
         </section>
 
         <!-- Customer information section -->
-        <section class="pb-4 rounded-[20px]">
-          <h2 class="w-fit mx-auto border-b-2 border-primary mb-4">
+        <section class="rounded-[20px] pb-4">
+          <h2 class="mx-auto mb-4 w-fit border-b-2 border-primary">
             Información del cliente
           </h2>
 
-          <ul class="grid grid-cols-4 px-4 lg:px-8 text-[9px]">
+          <ul class="grid grid-cols-4 px-4 text-[9px] lg:px-8">
             <li class="text-center">
               <h3
-                class="border-b border-black text-primary text-[9px] lg:text-base"
+                class="border-b border-black text-[9px] text-primary lg:text-base"
               >
                 Nombre
               </h3>
-              <p class="text-[8px] lg:text-xs print:text-[8px]">
+              <p class="text-[8px] print:text-[8px] lg:text-xs">
                 {{ currentInvoice.clientName }}
               </p>
             </li>
             <li class="text-center">
               <h3
-                class="border-b border-black text-primary text-[9px] lg:text-base"
+                class="border-b border-black text-[9px] text-primary lg:text-base"
               >
                 Empresa
               </h3>
-              <p class="text-[8px] lg:text-xs print:text-[8px]">
+              <p class="text-[8px] print:text-[8px] lg:text-xs">
                 {{ currentInvoice.clientCompany }}
               </p>
             </li>
             <li class="text-center">
               <h3
-                class="border-b border-black text-primary text-[9px] lg:text-base"
+                class="border-b border-black text-[9px] text-primary lg:text-base"
               >
                 Moneda
               </h3>
-              <p class="text-[8px] lg:text-xs print:text-[8px]">
+              <p class="text-[8px] print:text-[8px] lg:text-xs">
                 {{ currentInvoice.currencyType }}
               </p>
             </li>
             <li class="text-center">
               <h3
-                class="border-b border-black text-primary text-[9px] lg:text-base"
+                class="border-b border-black text-[9px] text-primary lg:text-base"
               >
                 Tipo de cambio
               </h3>
-              <p class="text-[8px] lg:text-xs print:text-[8px]">
+              <p class="text-[8px] print:text-[8px] lg:text-xs">
                 {{ currentInvoice.exchangeCost }}
               </p>
             </li>
@@ -260,27 +264,27 @@ const generatePDF = () => {
 
       <!-- Items table -->
       <section
-        class="overflow-x-auto min-h-[250px] shadow-lg bg-white rounded-[20px] mt-4"
+        class="mt-4 min-h-[250px] overflow-x-auto rounded-[20px] bg-white shadow-lg"
       >
-        <table class="table w-full px-8 relative">
+        <table class="relative table w-full px-8">
           <!-- head -->
           <thead>
             <tr class="text-xs">
-              <th class="bg-white pl-8 py-2 text-primary text-xs">ID</th>
-              <th class="bg-white px-4 py-2 text-primary text-xs">
+              <th class="bg-white py-2 pl-8 text-xs text-primary">ID</th>
+              <th class="bg-white px-4 py-2 text-xs text-primary">
                 Descripción
               </th>
-              <th class="bg-white px-4 py-2 text-center text-primary text-xs">
+              <th class="bg-white px-4 py-2 text-center text-xs text-primary">
                 Cantidad
               </th>
-              <th class="bg-white px-4 py-2 text-center text-primary text-xs">
+              <th class="bg-white px-4 py-2 text-center text-xs text-primary">
                 No. parte
               </th>
-              <th class="bg-white px-4 py-2 text-center text-primary text-xs">
+              <th class="bg-white px-4 py-2 text-center text-xs text-primary">
                 Precio unitario
               </th>
               <th
-                class="bg-white pl-4 pr-8 py-2 text-center text-primary text-xs"
+                class="bg-white py-2 pl-4 pr-8 text-center text-xs text-primary"
               >
                 Importe
               </th>
@@ -292,8 +296,8 @@ const generatePDF = () => {
               v-for="(item, index) in currentInvoice.invoiceItemList"
               :key="index"
             >
-              <th class="pl-8 py-2 pr-0">{{ item.id }}</th>
-              <td class="px-4 py-2 text-[9px] block">
+              <th class="py-2 pl-8 pr-0">{{ item.id }}</th>
+              <td class="block px-4 py-2 text-[9px]">
                 {{ item.itemName }}
               </td>
               <td class="px-0 py-2 text-center">{{ item.qty }}</td>
@@ -301,14 +305,14 @@ const generatePDF = () => {
               <td class="px-0 py-2 text-center">
                 ${{ parseFloat(item.price).toFixed(2) }}
               </td>
-              <td class="pl-0 pr-4 py-2 text-center">
+              <td class="py-2 pl-0 pr-4 text-center">
                 ${{ parseFloat(item.total).toFixed(2) }}
               </td>
             </tr>
 
             <tr>
               <th></th>
-              <td class="px-0 py-2 text-left text-xs text-primary font-bold">
+              <td class="px-0 py-2 text-left text-xs font-bold text-primary">
                 Tiempo de entrega
               </td>
               <td class="px-8 py-2 text-center text-xs italic">
@@ -324,16 +328,16 @@ const generatePDF = () => {
 
       <!-- Terms and total sections -->
       <section
-        class="pt-4 flex gap-4 flex-col-reverse print:flex-row lg:flex-row w-full"
+        class="flex w-full flex-col-reverse gap-4 pt-4 print:flex-row lg:flex-row"
       >
         <section
-          class="rounded-[20px] flex gap-4 bg-white px-6 py-4 lg:w-4/5 shadow-lg flex-col lg:flex-row print:flex-row w-full"
+          class="flex w-full flex-col gap-4 rounded-[20px] bg-white px-6 py-4 shadow-lg print:w-3/5 print:basis-4/5 print:flex-row print:pr-0 lg:w-4/5 lg:flex-row"
         >
-          <div>
-            <h3 class="text-[#1a1a1a] border-b-2 border-primary w-fit mb-2">
+          <div class="w-1/2 print:w-3/5">
+            <h3 class="mb-2 w-fit border-b-2 border-primary text-[#1a1a1a]">
               Condiciones del servicio
             </h3>
-            <p class="italic text-[8px] w-[50ch] lg:w-[100ch]">
+            <p class="w-[50ch] text-[8px] italic print:w-full lg:w-[80ch]">
               AGRADECIENDO SU AMABLE PREFERENCIA NOS ES GRATO SOMETER A SU
               CONSIDERACION NUESTRA COTIZACION DE ACUERDO A SU REQUERIMIENTO,
               ESPERANDO SEA SATISFACTORIA A SUS NECESIDADES, LOS PRECIOS
@@ -342,17 +346,17 @@ const generatePDF = () => {
               RESPECTO.
             </p>
           </div>
-          <div>
-            <h3 class="text-[#1a1a1a] border-b-2 border-primary w-fit mb-2">
+          <div class="w-1/2">
+            <h3 class="mb-2 w-fit border-b-2 border-primary text-[#1a1a1a]">
               Notas:
             </h3>
-            <p class="italic text-[8px] w-[70ch] print:w-[40-ch] uppercase">
+            <p class="w-[50ch] text-[10px] uppercase italic lg:w-[70ch]">
               {{ currentInvoice.notes }}
             </p>
           </div>
         </section>
         <section
-          class="rounded-[20px] w-full bg-white px-6 py-4 lg:w-1/5 flex flex-col justify-center shadow-lg"
+          class="flex w-full basis-[20%] flex-col justify-center rounded-[20px] bg-white px-6 py-4 shadow-lg print:basis-1/5 print:px-4 lg:w-1/5"
         >
           <div class="flex items-center justify-between">
             <div class="flex flex-col gap-2">
@@ -366,8 +370,8 @@ const generatePDF = () => {
               <p>${{ parseFloat(currentInvoice.invoiceTax).toFixed(2) }}</p>
             </div>
           </div>
-          <div class="divider divide w-full my-0"></div>
-          <div class="w-full flex justify-between font-bold">
+          <div class="divide divider my-0 w-full"></div>
+          <div class="flex w-full justify-between font-bold">
             <p class="text-primary">Total</p>
             <p>${{ parseFloat(currentInvoice.invoiceTotal).toFixed(2) }}</p>
           </div>
@@ -377,7 +381,7 @@ const generatePDF = () => {
     <div class="flex justify-center print:hidden" v-if="!user">
       <button
         @click="generatePDF"
-        class="bg-primary px-10 py-6 text-white flex-row border-none hover:shadow-lg transition-all text-xs hover:-translate-y-[1px] flex items-center gap-2 justify-center h-14 rounded-[10px] w-14 mt-8"
+        class="mt-8 flex h-14 w-14 flex-row items-center justify-center gap-2 rounded-[10px] border-none bg-primary px-10 py-6 text-xs text-white transition-all hover:-translate-y-[1px] hover:shadow-lg"
       >
         <i class="fa-solid fa-file-pdf text-lg"></i>
         Crear PDF

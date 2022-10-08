@@ -20,7 +20,8 @@ export const useStore = defineStore("main", () => {
   const editInvoice = ref(null);
   const user = ref(null);
 
-  const emailModal = ref(null);
+  const customModal = ref(null);
+  const modalType = ref(null);
 
   // const errorMsg = ref("");
 
@@ -95,6 +96,7 @@ export const useStore = defineStore("main", () => {
   const deleteCurrentInvoice = async (docId) => {
     deleteInvoice(docId);
     await deleteDoc(doc(db, "invoices", docId));
+    router.push("/");
   };
 
   const updateStatusToPaid = async (payload) => {
@@ -133,12 +135,7 @@ export const useStore = defineStore("main", () => {
     // const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        // user.value = true;
         console.log("Successfully signed in!");
-        // console.log("1", data.user);
-
-        // console.log("2", auth.currentUser);
-        // user.value = auth.currentUser;
 
         router.push("/");
       })
@@ -194,7 +191,8 @@ export const useStore = defineStore("main", () => {
     invoicesLoaded,
     currentInvoice,
     editInvoice,
-    emailModal,
+    customModal,
+    modalType,
     toggleInvoice,
     toggleModal,
     getInvoices,

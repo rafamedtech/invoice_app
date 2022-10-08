@@ -21,19 +21,19 @@ const closeInvoice = () => {
 <template>
   <div class="my-modal flex bg-[#1a1a1a]/50">
     <div class="modal-content">
-      <p>Are you sure you want to exit? Your changes will not be saved?</p>
+      <p>¿Seguro que quieres salir? Los cambios no serán guardados!</p>
       <div class="my-actions flex gap-2">
         <button
           @click="closeModal"
-          class="btn bg-[#f2f2f2] text-[#1a1a1a] border-none focus:outline-primary hover:bg-[#f2f2f2] hover:text-primary"
+          class="btn border-none bg-[#f2f2f2] text-[#1a1a1a] hover:bg-[#f2f2f2] hover:text-primary focus:outline-primary"
         >
-          Return
+          Regresar
         </button>
         <button
           @click="closeInvoice"
-          class="btn bg-primary border-none hover:bg-primary/50 focus:outline-primary"
+          class="btn border-none bg-primary hover:bg-primary/50 focus:outline-primary"
         >
-          Close
+          Salir
         </button>
       </div>
     </div>

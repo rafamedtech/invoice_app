@@ -67,8 +67,14 @@ defineProps(["invoice"]);
     gap: 16px;
 
     // span {
-    //   flex: 1;
+    //   flex: 0.5;
     // }
+
+    @media (min-width: 768px) {
+      span {
+        flex: 1;
+      }
+    }
 
     .tracking-number {
       text-transform: uppercase;

@@ -1,13 +1,12 @@
 <script setup>
+// Imports
 import { useStore } from "@/stores/main";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
-// import { useRoute, useRouter } from "vue-router";
 import emailjs from "@emailjs/browser";
 
-// const router = useRouter();
+// Definitions
 const { params } = useRoute();
-
 const { currentInvoice, user } = storeToRefs(useStore());
 const {
   setCurrentInvoice,
@@ -64,8 +63,14 @@ const sendEmail = () => {
 };
 
 const generatePDF = () => {
-  window.print();
+  useStore().$patch({
+    customModal: true,
+    modalType: "print",
+  });
 };
+// const generatePDF = () => {
+//   window.print();
+// };
 </script>
 
 <template>
@@ -95,7 +100,7 @@ const generatePDF = () => {
               pending: currentInvoice.invoicePending,
             }"
           >
-            <span v-if="currentInvoice.invoicePaid">Pagada</span>
+            <span v-if="currentInvoice.invoicePaid">Vendido</span>
             <span v-if="currentInvoice.invoiceDraft">Borrador</span>
             <span v-if="currentInvoice.invoicePending">Pendiente</span>
           </div>
@@ -123,7 +128,7 @@ const generatePDF = () => {
             class="flex h-14 w-14 flex-col items-center justify-center gap-0 rounded-[10px] border-none bg-[#f2f2f2] px-2 py-8 text-[9px] text-[#1a1a1a] transition-all hover:-translate-y-[1px] hover:shadow-lg lg:text-[10px]"
           >
             <i class="fa-regular fa-circle-check text-base text-green-500"></i>
-            Marcar Pagada
+            Marcar Vendido
           </button>
           <button
             v-if="currentInvoice.invoiceDraft || currentInvoice.invoicePaid"
@@ -156,27 +161,25 @@ const generatePDF = () => {
     <!-- Cover -->
 
     <div
-      class="print:hidden lg:print:h-screen lg:print:w-screen"
+      class="rounded-[20px] print:hidden lg:print:h-screen lg:print:w-screen"
       :class="{ hidden: user }"
     >
       <picture>
         <source
           media="(max-width: 767px)"
-          srcset="@/assets/images/coverdemomobile.png"
+          srcset="@/assets/images/covermvppt.png"
         />
         <img
-          src="@/assets/images/coverdemo.png"
-          srcset="@/assets/images/coverdemo.png"
+          src="@/assets/images/covermvp.png"
+          srcset="@/assets/images/covermvp.png"
           alt=""
-          class="mb-4 rounded-[20px]"
+          class="mb-8 rounded-[20px] shadow-lg"
         />
       </picture>
     </div>
 
-    <figure
-      class="hidden print:mb-36 print:flex print:h-full print:items-center"
-    >
-      <img src="@/assets/images/coverdemo.png" alt="" />
+    <figure class="hidden print:flex print:h-screen print:items-center">
+      <img src="@/assets/images/covermvp.png" alt="" />
     </figure>
 
     <!-- Invoice body -->
@@ -185,9 +188,12 @@ const generatePDF = () => {
         <section class="relative flex h-full justify-between px-4 lg:px-8">
           <div class="mb-4 h-fit">
             <img class="mb-2 h-28" src="@/assets/logo.png" />
-            <span class="text-xs font-bold text-primary"
+            <span class="block text-xs font-bold text-primary"
               >GCO SOLUCIONES <span class="text-secondary">INDUSTRIALES</span>
             </span>
+            <a class="text-[10px]" href="https://www.gcosoluciones.com"
+              >www.gcosoluciones.com</a
+            >
             <p class="w-[50ch] text-[8px] lg:w-[70ch]">
               SISTEMAS DE CONTROL ELÉCTRICO, ELECTRÓNICO, NEUMÁTICO,
               AUTOMATIZACIÓN, FILTRACIÓN, CONTROL DE FLAMA, PRESIÓN,
@@ -195,19 +201,18 @@ const generatePDF = () => {
             </p>
           </div>
           <h1
-            class="absolute inset-0 top-2 hidden text-center text-xl font-bold uppercase italic text-primary lg:block"
+            class="absolute inset-0 top-2 hidden h-fit text-center text-xl font-bold uppercase italic text-primary lg:block"
           >
             Cotización
           </h1>
           <div class="flex flex-col items-end">
-            <!-- <h3 class="text-primary">Cotización</h3> -->
-            <p class="font-bold">#{{ currentInvoice.invoiceId }}</p>
+            <p class="font-bold uppercase">#{{ currentInvoice.invoiceId }}</p>
 
             <h3 class="text-[9px] text-primary lg:text-base">Fecha</h3>
-            <p class="text-xs">{{ currentInvoice.invoiceDate }}</p>
+            <p class="text-[10px]">{{ currentInvoice.invoiceDate }}</p>
 
             <h3 class="text-[9px] text-primary lg:text-base">Vigencia</h3>
-            <p class="text-xs">{{ currentInvoice.paymentDueDate }}</p>
+            <p class="text-[10px]">{{ currentInvoice.paymentDueDate }}</p>
           </div>
         </section>
 
@@ -264,10 +269,198 @@ const generatePDF = () => {
 
       <!-- Items table -->
       <section
-        class="mt-4 min-h-[250px] overflow-x-auto rounded-[20px] bg-white shadow-lg"
+        class="relative mt-4 min-h-[250px] overflow-x-auto rounded-[20px] bg-white shadow-lg"
       >
-        <table class="relative table w-full px-8">
-          <!-- head -->
+        <div
+          class="flex w-[150vw] justify-between gap-2 px-4 text-center text-[10px] print:w-full lg:w-full lg:justify-between lg:gap-2 lg:px-8"
+        >
+          <h5 class="w-6 py-2 font-bold text-primary">ID</h5>
+          <div class="w-72 print:w-[25rem] lg:basis-7/12">
+            <h5 class="w-full py-2 font-bold text-primary">Descripción</h5>
+          </div>
+          <h5 class="py-2 font-bold text-primary lg:basis-1/12">Cantidad</h5>
+          <h5 class="py-2 font-bold text-primary lg:basis-1/12">No parte</h5>
+          <h5 class="py-2 font-bold text-primary lg:basis-1/12">
+            Precio unitario
+          </h5>
+          <h5 class="w-12 py-2 font-bold text-primary">Importe</h5>
+        </div>
+        <div
+          class="flex w-[150vw] justify-between gap-2 px-4 text-center text-[10px] print:w-full lg:w-full lg:justify-between lg:gap-2 lg:px-8"
+          v-for="(item, index) in currentInvoice.invoiceItemList"
+          :key="index"
+        >
+          <p class="w-6 py-2">{{ item.id }}</p>
+          <div class="w-72 print:w-[25rem] lg:basis-7/12">
+            <p class="w-full py-2 text-left">{{ item.itemName }}</p>
+          </div>
+          <p class="py-2 lg:basis-1/12">{{ item.qty }}</p>
+          <p class="py-2 lg:basis-1/12">{{ item.partNo }}</p>
+          <p class="py-2 lg:basis-1/12">
+            ${{ parseFloat(item.price).toFixed(2) }}
+          </p>
+          <p class="w-12 py-2 text-right">
+            ${{ parseFloat(item.total).toFixed(2) }}
+          </p>
+        </div>
+        <div class="absolute bottom-4 flex w-full justify-end gap-4 px-4">
+          <h5 class="text-left text-xs font-bold text-primary">
+            Tiempo de entrega
+          </h5>
+          <p class="text-center text-xs italic">
+            {{ currentInvoice.eta }}
+          </p>
+        </div>
+      </section>
+
+      <!-- Terms and total sections -->
+      <section
+        class="flex w-full flex-col-reverse gap-4 pt-4 print:flex-row lg:flex-row"
+      >
+        <section
+          class="flex w-full flex-col gap-4 rounded-[20px] bg-white px-6 py-4 shadow-lg print:w-3/5 print:basis-4/5 print:flex-row print:pr-0 lg:w-4/5 lg:flex-row"
+        >
+          <div class="print:w-3/5 lg:w-1/2">
+            <h3 class="mb-2 w-fit border-b-2 border-primary text-[#1a1a1a]">
+              Condiciones del servicio
+            </h3>
+            <p class="w-[50ch] text-[8px] italic print:w-full lg:w-[80ch]">
+              AGRADECIENDO SU AMABLE PREFERENCIA NOS ES GRATO SOMETER A SU
+              CONSIDERACION NUESTRA COTIZACION DE ACUERDO A SU REQUERIMIENTO,
+              ESPERANDO SEA SATISFACTORIA A SUS NECESIDADES, LOS PRECIOS
+              MENCIONADOS ESTAN SUJETOS A ALTERACIONES. POR LO ANTERIOR,
+              QUEDAMOS A SUS ORDENES PARA CUALQUIER DUDA O ACLARACION AL
+              RESPECTO.
+            </p>
+          </div>
+          <div class="w-1/2">
+            <h3 class="mb-2 w-fit border-b-2 border-primary text-[#1a1a1a]">
+              Notas:
+            </h3>
+            <p
+              class="w-[50ch] text-[10px] uppercase italic print:w-full lg:w-[70ch]"
+            >
+              {{ currentInvoice.notes }}
+            </p>
+          </div>
+        </section>
+        <section
+          class="flex w-full basis-[20%] flex-col justify-center rounded-[20px] bg-white px-6 py-4 shadow-lg print:basis-1/5 print:px-4 lg:w-1/5"
+        >
+          <div class="flex items-center justify-between">
+            <div class="flex flex-col gap-2">
+              <p class="text-xs text-primary">Subtotal</p>
+              <p class="text-xs text-primary">IVA 16%</p>
+            </div>
+            <div class="flex flex-col items-end gap-2 text-xs">
+              <p>
+                ${{ parseFloat(currentInvoice.invoiceSubtotal).toFixed(2) }}
+              </p>
+              <p>${{ parseFloat(currentInvoice.invoiceTax).toFixed(2) }}</p>
+            </div>
+          </div>
+          <div class="divide divider my-0 w-full"></div>
+          <div class="flex w-full justify-between font-bold">
+            <p class="text-primary">Total</p>
+            <p>${{ parseFloat(currentInvoice.invoiceTotal).toFixed(2) }}</p>
+          </div>
+        </section>
+      </section>
+    </div>
+    <!-- :class="{ hidden: user }" -->
+    <section class="mt-8 lg:print:h-screen lg:print:w-screen">
+      <img src="../assets/logo-bgremoved.png" class="mb-2 h-24" alt="" />
+      <div
+        class="relative flex h-[500px] w-full items-center rounded-[20px] bg-white py-12 px-8 text-xs shadow-lg print:px-40 lg:px-80 lg:text-base"
+      >
+        <h2
+          class="absolute inset-0 top-4 h-fit text-center text-xl font-bold uppercase italic text-primary print:block lg:block"
+        >
+          Ficha Técnica
+        </h2>
+        <p
+          class="w-full text-center"
+          v-if="currentInvoice.featureType === 'texto'"
+        >
+          {{ currentInvoice.features.text }}
+        </p>
+        <figure
+          class="flex h-full items-center"
+          v-if="currentInvoice.featureType === 'imagen'"
+        >
+          <img
+            :src="currentInvoice.features.image"
+            alt=""
+            class="mb-4 rounded-[20px]"
+          />
+        </figure>
+        <!-- <picture>
+          <source
+            media="(max-width: 767px)"
+            srcset="@/assets/images/coverdemomobile.png"
+          />
+          <img
+            src="@/assets/images/coverdemo.png"
+            srcset="@/assets/images/coverdemo.png"
+            alt=""
+            class="mb-4 rounded-[20px]"
+          />
+        </picture> -->
+      </div>
+      <section class="mt-4 flex justify-end">
+        <ul class="mr-0 flex flex-col">
+          <li>
+            <i
+              v-if="currentInvoice.condition === 'nuevo'"
+              class="fa-regular fa-circle-check text-xl text-green-500"
+            ></i>
+            <i
+              v-else
+              class="fa-regular fa-circle-xmark text-xl text-red-500"
+            ></i>
+            Nuevo
+          </li>
+          <li>
+            <i
+              v-if="currentInvoice.condition === 'usado'"
+              class="fa-regular fa-circle-check text-xl text-green-500"
+            ></i>
+            <i
+              v-else
+              class="fa-regular fa-circle-xmark text-xl text-red-500"
+            ></i>
+            Usado
+          </li>
+          <li>
+            <i
+              v-if="currentInvoice.condition === 'refurbished'"
+              class="fa-regular fa-circle-check text-xl text-green-500"
+            ></i>
+            <i
+              v-else
+              class="fa-regular fa-circle-xmark text-xl text-red-500"
+            ></i>
+            Refurbished
+          </li>
+        </ul>
+      </section>
+    </section>
+
+    <!-- Crear PDF usuario -->
+    <div class="flex justify-center print:hidden" v-if="!user">
+      <button
+        @click="generatePDF"
+        class="mt-8 flex h-14 w-40 flex-row items-center justify-center gap-2 rounded-[10px] border-none bg-primary px-10 py-6 text-xs text-white transition-all hover:-translate-y-[1px] hover:shadow-lg"
+      >
+        <i class="fa-solid fa-file-pdf text-lg"></i>
+        Crear PDF
+      </button>
+    </div>
+  </main>
+</template>
+
+<!-- <table class="relative table w-full px-8">
+          head
           <thead>
             <tr class="text-xs">
               <th class="bg-white py-2 pl-8 text-xs text-primary">ID</th>
@@ -291,7 +484,7 @@ const generatePDF = () => {
             </tr>
           </thead>
           <tbody>
-            <!-- rows -->
+             rows 
             <tr
               v-for="(item, index) in currentInvoice.invoiceItemList"
               :key="index"
@@ -323,72 +516,7 @@ const generatePDF = () => {
               <td></td>
             </tr>
           </tbody>
-        </table>
-      </section>
-
-      <!-- Terms and total sections -->
-      <section
-        class="flex w-full flex-col-reverse gap-4 pt-4 print:flex-row lg:flex-row"
-      >
-        <section
-          class="flex w-full flex-col gap-4 rounded-[20px] bg-white px-6 py-4 shadow-lg print:w-3/5 print:basis-4/5 print:flex-row print:pr-0 lg:w-4/5 lg:flex-row"
-        >
-          <div class="w-1/2 print:w-3/5">
-            <h3 class="mb-2 w-fit border-b-2 border-primary text-[#1a1a1a]">
-              Condiciones del servicio
-            </h3>
-            <p class="w-[50ch] text-[8px] italic print:w-full lg:w-[80ch]">
-              AGRADECIENDO SU AMABLE PREFERENCIA NOS ES GRATO SOMETER A SU
-              CONSIDERACION NUESTRA COTIZACION DE ACUERDO A SU REQUERIMIENTO,
-              ESPERANDO SEA SATISFACTORIA A SUS NECESIDADES, LOS PRECIOS
-              MENCIONADOS ESTAN SUJETOS A ALTERACIONES. POR LO ANTERIOR,
-              QUEDAMOS A SUS ORDENES PARA CUALQUIER DUDA O ACLARACION AL
-              RESPECTO.
-            </p>
-          </div>
-          <div class="w-1/2">
-            <h3 class="mb-2 w-fit border-b-2 border-primary text-[#1a1a1a]">
-              Notas:
-            </h3>
-            <p class="w-[50ch] text-[10px] uppercase italic lg:w-[70ch]">
-              {{ currentInvoice.notes }}
-            </p>
-          </div>
-        </section>
-        <section
-          class="flex w-full basis-[20%] flex-col justify-center rounded-[20px] bg-white px-6 py-4 shadow-lg print:basis-1/5 print:px-4 lg:w-1/5"
-        >
-          <div class="flex items-center justify-between">
-            <div class="flex flex-col gap-2">
-              <p class="text-xs text-primary">Subtotal</p>
-              <p class="text-xs text-primary">IVA 16%</p>
-            </div>
-            <div class="flex flex-col items-end gap-2 text-xs">
-              <p>
-                ${{ parseFloat(currentInvoice.invoiceSubtotal).toFixed(2) }}
-              </p>
-              <p>${{ parseFloat(currentInvoice.invoiceTax).toFixed(2) }}</p>
-            </div>
-          </div>
-          <div class="divide divider my-0 w-full"></div>
-          <div class="flex w-full justify-between font-bold">
-            <p class="text-primary">Total</p>
-            <p>${{ parseFloat(currentInvoice.invoiceTotal).toFixed(2) }}</p>
-          </div>
-        </section>
-      </section>
-    </div>
-    <div class="flex justify-center print:hidden" v-if="!user">
-      <button
-        @click="generatePDF"
-        class="mt-8 flex h-14 w-14 flex-row items-center justify-center gap-2 rounded-[10px] border-none bg-primary px-10 py-6 text-xs text-white transition-all hover:-translate-y-[1px] hover:shadow-lg"
-      >
-        <i class="fa-solid fa-file-pdf text-lg"></i>
-        Crear PDF
-      </button>
-    </div>
-  </main>
-</template>
+        </table> -->
 
 <style lang="scss" scoped>
 .invoice-view {

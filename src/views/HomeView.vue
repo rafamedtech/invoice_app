@@ -1,14 +1,15 @@
 <script setup>
+// Imports
 import { ref, computed } from "vue";
 import { useStore } from "@/stores/main";
 import { storeToRefs } from "pinia";
 
+// Components imports
 import MyInvoice from "@/components/MyInvoice.vue";
-// import LoginForm from "@/components/LoginForm.vue";
 
 const filterMenu = ref(null);
-
 const { getInvoices } = useStore();
+const { invoiceData } = storeToRefs(useStore());
 
 const newInvoice = () => {
   useStore().toggleInvoice();
@@ -17,8 +18,6 @@ const newInvoice = () => {
 const toggleFilterMenu = () => {
   filterMenu.value = !filterMenu.value;
 };
-
-const { invoiceData } = storeToRefs(useStore());
 
 const filteredInvoice = ref("");
 
@@ -55,17 +54,17 @@ getInvoices();
     <!-- Header -->
     <div>
       <div class="header flex">
-        <div class="left flex flex-column">
-          <h1 class="lg:text-3xl text-2xl text-primary">Cotizaciones</h1>
+        <div class="left flex-column flex">
+          <h1 class="text-2xl text-primary lg:text-3xl">Cotizaciones</h1>
           <span class="text-sm"
             >Tienes (<span class="text-primary">{{ invoiceData.length }}</span
             >) en total</span
           >
         </div>
         <div
-          class="right flex flex-col-reverse lg:flex-row gap-4 items-end lg:items-center"
+          class="right flex flex-col-reverse items-end gap-4 lg:flex-row lg:items-center"
         >
-          <div @click="toggleFilterMenu" class="filter flex gap-2">
+          <div @click="toggleFilterMenu" class="flex gap-2 filter">
             <span
               >Filtrar etapa
               <span class="text-secondary" v-if="filteredInvoice"
@@ -82,7 +81,7 @@ getInvoices();
           </div>
           <div
             @click="newInvoice"
-            class="btn bg-primary border-none flex gap-2 hover:bg-secondary"
+            class="btn flex gap-2 border-none bg-primary text-white hover:bg-secondary"
           >
             <div class="inner-button flex">
               <i class="fa-solid fa-plus"></i>
@@ -102,7 +101,7 @@ getInvoices();
         />
       </div>
 
-      <div v-else class="empty flex flex-column">
+      <div v-else class="empty flex-column flex">
         <img src="@/assets/images/illustration-empty.svg" alt="" />
         <h3>No hay cotizaciones</h3>
         <p>Crea una nueva cotización haciendo click en el botón +Cotización</p>
@@ -155,12 +154,17 @@ getInvoices();
           z-index: 999;
           position: absolute;
           top: 25px;
+          right: 0;
           list-style: none;
           background-color: #fff;
           border-radius: 10px;
           // background-color: #1e2139;
           box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
             0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+          @media (min-width: 768px) {
+            right: -50px;
+          }
 
           li {
             cursor: pointer;

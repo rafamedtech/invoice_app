@@ -1,13 +1,15 @@
 <script setup>
+// Dependencies imports
 import { reactive, ref, computed, watchEffect } from "vue";
 import { useStore } from "@/stores/main";
 import { storeToRefs } from "pinia";
 import { uid } from "uid";
 import { collection, updateDoc, addDoc, doc } from "firebase/firestore";
-import { db } from "@/firebase";
-
+import { db, storageRef } from "@/firebase";
+// Components imports
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
+// Definitions
 const state = reactive({
   dateOptions: { year: "numeric", month: "short", day: "numeric" },
   docId: null,
@@ -23,14 +25,20 @@ const state = reactive({
   currencyType: "MX",
   exchangeCost: "",
   eta: "Inmediata",
+  condition: "",
   notes: null,
+  featureType: "texto",
+  features: { text: "", image: null },
   invoicePending: null,
   invoiceDraft: null,
   invoiceItemList: [
-    { id: uid(2), itemName: "", qty: "", partNo: "", price: "" },
+    { id: uid(2), itemName: "", qty: "1", partNo: "", price: "0" },
   ],
   invoiceSubtotal: 0,
 });
+const { editInvoice, currentInvoice } = storeToRefs(useStore());
+const { editCurrentInvoice, updateCurrentInvoice, getInvoices, toggleModal } =
+  useStore();
 
 const invoiceTax = computed(() => {
   return state.invoiceSubtotal * 0.16;
@@ -39,10 +47,6 @@ const invoiceTax = computed(() => {
 const invoiceTotal = computed(() => {
   return state.invoiceSubtotal + invoiceTax.value;
 });
-
-const { editInvoice, currentInvoice } = storeToRefs(useStore());
-const { editCurrentInvoice, updateCurrentInvoice, getInvoices, toggleModal } =
-  useStore();
 
 const closeInvoice = () => {
   useStore().toggleInvoice();
@@ -55,15 +59,37 @@ const addNewInvoiceItem = () => {
   state.invoiceItemList.push({
     id: uid(2),
     itemName: "",
-    qty: "",
+    qty: "1",
     partNo: "",
     price: 0,
     total: 0,
   });
 };
 
-const invoiceWrap = ref(null);
+// Get image from input
+const onUpload = async (e) => {
+  const files = e.target.files;
+  let filename = files[0].name;
+  if (filename.lastIndexOf(".") <= 0) {
+    return alert("Please add a valid file");
+  }
 
+  const fileReader = new FileReader();
+  fileReader.addEventListener("load", () => {
+    state.features.image = fileReader.result;
+  });
+  fileReader.readAsDataURL(files[0]);
+
+  await storageRef.child("features").child(filename).put(files[0]);
+  const urlDescarga = await storageRef
+    .child("features")
+    .child(filename)
+    .getDownloadURL();
+  state.features.image = urlDescarga;
+};
+
+// Open modal when click outside of modal
+const invoiceWrap = ref(null);
 const checkClick = (e) => {
   if (e.target === invoiceWrap.value) {
     toggleModal();
@@ -91,6 +117,7 @@ const saveDraft = () => {
   state.invoiceDraft = true;
 };
 
+// Send invoice to Firebase
 const uploadInvoice = async () => {
   if (state.invoiceItemList.length <= 0) {
     alert("Favor de agregar articulos a la cotizacion!");
@@ -115,6 +142,9 @@ const uploadInvoice = async () => {
     paymentTerms: state.paymentTerms,
     paymentDueDate: state.paymentDueDate,
     paymentDueDateUnix: state.paymentDueDateUnix,
+    condition: state.condition,
+    featureType: state.featureType,
+    features: state.features,
     invoiceItemList: state.invoiceItemList,
     invoiceSubtotal: state.invoiceSubtotal,
     invoiceTax: invoiceTax.value,
@@ -131,6 +161,7 @@ const uploadInvoice = async () => {
   getInvoices();
 };
 
+// Update current invoice in Firebase
 const updateInvoice = async () => {
   if (state.invoiceItemList.length <= 0) {
     alert("Please ensure you filled out work items!");
@@ -153,7 +184,10 @@ const updateInvoice = async () => {
     paymentTerms: state.paymentTerms,
     paymentDueDate: state.paymentDueDate,
     paymentDueDateUnix: state.paymentDueDateUnix,
+    condition: state.condition,
     notes: state.notes,
+    featureType: state.featureType,
+    features: state.features,
     invoiceItemList: state.invoiceItemList,
     invoiceSubtotal: state.invoiceSubtotal,
     invoiceTax: invoiceTax.value,
@@ -201,13 +235,14 @@ if (editInvoice.value) {
   state.paymentTerms = currentInvoice.value.paymentTerms;
   state.paymentDueDateUnix = currentInvoice.value.paymentDueDateUnix;
   state.paymentDueDate = currentInvoice.value.paymentDueDate;
+  state.condition = currentInvoice.value.condition;
   state.notes = currentInvoice.value.notes;
+  state.featureType = currentInvoice.value.featureType;
+  state.features = currentInvoice.value.features;
   state.invoicePending = currentInvoice.value.invoicePending;
   state.invoiceDraft = currentInvoice.value.invoiceDraft;
   state.invoiceItemList = currentInvoice.value.invoiceItemList;
   state.invoiceSubtotal = currentInvoice.value.invoiceSubtotal;
-  // invoiceTax.value = currentInvoice.value.invoiceTax;
-  // invoiceTotal.value = currentInvoice.value.invoiceTotal;
 }
 
 watchEffect(() => {
@@ -314,11 +349,14 @@ watchEffect(() => {
         </div>
 
         <!-- Invoice Work Details -->
+        <!-- <div class="invoice-work grid grid-cols-2 lg:grid-cols-4"> -->
         <div class="invoice-work flex-column flex">
-          <div class="payment flex">
+          <div class="payment grid grid-cols-2 lg:grid-cols-4">
+            <!-- <div class="payment flex"> -->
             <div class="flex-column flex">
               <label for="invoiceDate">Fecha</label>
               <input
+                class="text-[12px]"
                 disabled
                 type="text"
                 id="invoiceDate"
@@ -343,12 +381,26 @@ watchEffect(() => {
                 >Tiempo de entrega</label
               >
               <input
-                class="focus:ring-primary"
+                class="text-[12px] focus:ring-primary"
                 type="text"
                 id="paymentDueDate"
                 v-model="state.eta"
               />
               <!-- v-model="state.paymentDueDate" -->
+            </div>
+            <div class="flex flex-col">
+              <label for="condition">Condición</label>
+              <select
+                class="focus:ring-primary"
+                v-model="state.condition"
+                required
+                name="condition"
+                id="condition"
+              >
+                <option value="nuevo">Nuevo</option>
+                <option value="usado">Usado</option>
+                <option value="refurbished">Refurbished</option>
+              </select>
             </div>
           </div>
 
@@ -358,22 +410,22 @@ watchEffect(() => {
               <tr class="table-heading flex">
                 <th class="item-name">Descripción</th>
                 <th class="qty">Ctd</th>
-                <th class="price">No. parte</th>
+                <th class="price"># Parte</th>
                 <th class="price">Precio</th>
                 <th class="total">Total</th>
               </tr>
-              <div v-auto-animate>
+              <transition-group name="list" tag="div" class="relative">
                 <tr
-                  class="table-items flex gap-[10px] lg:gap-4"
+                  class="table-items flex items-start gap-[10px] lg:gap-4"
                   v-for="(item, index) in state.invoiceItemList"
                   :key="index"
                 >
                   <td class="item-name">
-                    <input
-                      class="focus:ring-primary"
+                    <textarea
+                      class="w-full rounded-[16px] border-none focus:ring-primary"
                       type="text"
                       v-model="item.itemName"
-                    />
+                    ></textarea>
                   </td>
                   <td class="qty">
                     <input
@@ -396,7 +448,7 @@ watchEffect(() => {
                       v-model="item.price"
                     />
                   </td>
-                  <td class="total flex">
+                  <td class="total flex h-10 items-center">
                     ${{
                       parseFloat((item.total = item.qty * item.price)).toFixed(
                         2
@@ -409,18 +461,83 @@ watchEffect(() => {
                     title="Borrar artículo"
                   ></i>
                 </tr>
-              </div>
+              </transition-group>
             </table>
 
             <div
               @click="addNewInvoiceItem"
-              class="btn flex gap-2 border-none bg-primary/50 hover:bg-secondary"
+              class="btn mx-auto flex w-fit gap-2 border-none bg-primary/50 text-white hover:bg-secondary"
             >
               <i class="fa-solid fa-plus"></i>
               Agregar artículo
             </div>
           </div>
 
+          <div class="mt-8 flex flex-col gap-2">
+            <h3 class="text-primary">Ficha técnica</h3>
+            <fieldset class="flex w-fit gap-8">
+              <div class="flex gap-2">
+                <label for="html">Texto</label>
+                <input
+                  v-model="state.featureType"
+                  class="radio-primary w-4 focus:ring-primary"
+                  type="radio"
+                  id="texto"
+                  name="texto"
+                  value="texto"
+                />
+              </div>
+
+              <div class="flex gap-2">
+                <label for="imagen">Imagen</label>
+                <input
+                  v-model="state.featureType"
+                  class="radio-primary w-4 focus:ring-primary"
+                  type="radio"
+                  id="imagen"
+                  name="imagen"
+                  value="imagen"
+                />
+              </div>
+            </fieldset>
+            <div class="h-28">
+              <Transition name="feature" mode="out-in">
+                <textarea
+                  v-if="state.featureType === 'texto'"
+                  id="notes"
+                  class="h-full w-full rounded-[16px] border-none focus:ring-primary"
+                  v-model="state.features.text"
+                ></textarea>
+
+                <div
+                  v-else
+                  class="flex h-full items-center justify-evenly gap-4"
+                >
+                  <label class="btn btn-primary text-white" for="upload"
+                    >Subir imagen</label
+                  >
+                  <input
+                    class="hidden"
+                    type="file"
+                    name="upload"
+                    id="upload"
+                    accept="image/*"
+                    @change="onUpload"
+                  />
+                  <figure class="w-60">
+                    <Transition name="feature" appear>
+                      <img
+                        class="w-full"
+                        :src="state.features.image"
+                        alt=""
+                        style="transition-delay: 0.3s"
+                      />
+                    </Transition>
+                  </figure>
+                </div>
+              </Transition>
+            </div>
+          </div>
           <div class="mt-8 flex flex-col">
             <label for="notes">Notas</label>
             <textarea
@@ -449,7 +566,7 @@ watchEffect(() => {
           <div class="left">
             <button
               type="button"
-              @click="closeInvoice"
+              @click="toggleModal"
               class="btn w-full border-none bg-white text-primary hover:bg-secondary hover:text-white focus:outline-primary lg:w-auto"
             >
               Cancelar
@@ -468,14 +585,14 @@ watchEffect(() => {
               v-if="!editInvoice"
               type="submit"
               @click="publishInvoice"
-              class="btn border-none bg-primary hover:bg-secondary hover:text-white focus:outline-primary"
+              class="btn border-none bg-primary text-white hover:bg-secondary hover:text-white focus:outline-primary"
             >
               Crear Cotización
             </button>
             <button
               v-if="editInvoice"
               type="sumbit"
-              class="btn border-none bg-primary hover:bg-secondary focus:outline-primary"
+              class="btn border-none bg-primary text-white hover:bg-secondary focus:outline-primary"
             >
               Actualizar Cotización
             </button>
@@ -499,6 +616,54 @@ watchEffect(() => {
   transform: translateX(-700px);
   opacity: 0;
 }
+
+.feature-enter-from {
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+.feature-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.feature-enter-active {
+  transition: all 0.3s;
+}
+
+.list-enter-from {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.list-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.list-enter-active {
+  transition: all 0.4s ease;
+}
+
+.list-leave-from {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.list-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.list-leave-active {
+  transition: all 0.4s ease;
+  position: absolute;
+}
+
+.list-move {
+  transition: all 0.3s ease;
+}
+
 .invoice-wrap {
   position: fixed;
   top: 0;
@@ -574,7 +739,8 @@ watchEffect(() => {
             // font-size: 12px;
 
             .item-name {
-              flex-basis: 30%;
+              flex-basis: 40%;
+              // flex-basis: 30%;
               // @media (min-width: 900px) {
               //   flex-basis: 50%;
               // }
@@ -589,12 +755,14 @@ watchEffect(() => {
             }
 
             .price {
-              flex-basis: 20%;
+              flex-basis: 12%;
+              // flex-basis: 20%;
             }
 
             .total {
-              flex-basis: 20%;
-              align-self: center;
+              flex-basis: 15%;
+
+              // align-self: center;
             }
           }
 
@@ -657,7 +825,7 @@ watchEffect(() => {
     // background-color: transparent !important;
   }
 
-  input,
+  input:not([type="radio"]),
   select {
     width: 100%;
     // background-color: #fff;

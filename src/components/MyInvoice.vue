@@ -1,13 +1,11 @@
 <script setup>
 defineProps(["invoice"]);
-// defineProps({
-//   invoice: Object,
-// });
 </script>
+
 <template>
   <router-link
     :to="{ name: 'Invoice', params: { invoiceId: invoice.invoiceId } }"
-    class="invoice py-7 lg:px-8 px-4 flex hover:shadow-lg transition-all duration-300 focus:outline-primary"
+    class="invoice flex py-7 px-4 transition-all duration-300 hover:shadow-lg focus:outline-primary lg:px-8"
   >
     <div class="left flex">
       <span class="tracking-number text-xs lg:text-base"
@@ -21,14 +19,14 @@ defineProps(["invoice"]);
         >${{ parseFloat(invoice.invoiceTotal).toFixed(2) }}</span
       >
       <div
-        class="status-button py-2 px-4 lg:mr-2 lg:px-8 flex gap-2"
+        class="status-button flex gap-2 py-2 px-4 lg:mr-2 lg:px-8"
         :class="{
           paid: invoice.invoicePaid,
           draft: invoice.invoiceDraft,
           pending: invoice.invoicePending,
         }"
       >
-        <span class="hidden lg:block" v-if="invoice.invoicePaid">Pagada</span>
+        <span class="hidden lg:block" v-if="invoice.invoicePaid">Vendido</span>
         <span class="hidden lg:block" v-if="invoice.invoiceDraft"
           >Borrador</span
         >

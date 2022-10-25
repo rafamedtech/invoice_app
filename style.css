@@ -5,12 +5,18 @@
 @layer base {
   body {
     background-color: #f2f2f2;
+    overflow-x: hidden;
+    color: black;
   }
 
   th,
   td {
     @apply text-xs;
   }
+
+  /* [data-theme="mytheme"] p {
+    color: black;
+  } */
 }
 
 @layer utilities {

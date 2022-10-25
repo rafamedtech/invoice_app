@@ -53,7 +53,10 @@ export const useStore = defineStore("main", () => {
           paymentTerms: doc.data().paymentTerms,
           paymentDueDateUnix: doc.data().paymentDueDateUnix,
           paymentDueDate: doc.data().paymentDueDate,
+          condition: doc.data().condition,
           notes: doc.data().notes,
+          featureType: doc.data().featureType,
+          features: doc.data().features,
           invoiceItemList: doc.data().invoiceItemList,
           invoiceTax: doc.data().invoiceTax,
           invoiceSubtotal: doc.data().invoiceSubtotal,
@@ -143,19 +146,19 @@ export const useStore = defineStore("main", () => {
         console.log(error.code);
         switch (error.code) {
           case "auth/invalid-email":
-            alert("Correo electronico invalido");
+            alert("Correo electrónico inválido");
             // errorMsg.value = "Invalid email";
             break;
           case "auth/user-not-found":
-            alert("No se encontro una cuenta con este correo electronico");
+            alert("No se encontro una cuenta con este correo electrónico");
             // errorMsg.value = "No account with that email was found";
             break;
           case "auth/wrong-password":
-            alert("Contrasena incorrecta");
+            alert("Contraseña incorrecta");
             // errorMsg.value = "incorrect password";
             break;
           default:
-            alert("Correo electronico o contrasena incorrectos");
+            alert("Correo electrónico o contraseña incorrectos");
             // errorMsg.value = "Email or password was incorrect";
             break;
         }

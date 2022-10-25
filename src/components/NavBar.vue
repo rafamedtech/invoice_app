@@ -1,23 +1,29 @@
 <script setup>
 import { useStore } from "@/stores/main";
 
-const { userLogout } = useStore();
+// const { userLogout } = useStore();
+const userLogout = () => {
+  useStore().$patch({
+    customModal: true,
+    modalType: "logout",
+  });
+};
 </script>
 
 <template>
   <header
-    class="flex print:hidden justify-between flex-col shadow-sm lg:shadow-lg"
+    class="flex flex-col justify-between shadow-sm print:hidden lg:shadow-lg"
   >
-    <div class="branding w-28 lg:w-24 items-center flex bg-white">
+    <div class="branding flex w-28 items-center bg-white lg:w-24">
       <img
         src="@/assets/logo-bgremoved.png"
         alt=""
-        class="rounded-[10px] lg:w-24 lg:h-24"
+        class="rounded-[10px] lg:h-24 lg:w-24"
       />
     </div>
     <button
       @click="userLogout"
-      class="branding flex bg-white flex-col items-center text-secondary"
+      class="branding flex flex-col items-center bg-white text-secondary"
     >
       <i class="fa-solid fa-right-from-bracket text-2xl"></i>
       <p class="text-xs">Cerrar sesión</p>

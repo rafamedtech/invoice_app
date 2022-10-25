@@ -1,16 +1,17 @@
 <script setup>
+// Dependencies imports
 import { useStore } from "@/stores/main";
 import { storeToRefs } from "pinia";
 
 const { editInvoice } = storeToRefs(useStore());
-const { editCurrentInvoice } = useStore();
+const { editCurrentInvoice, toggleModal, toggleInvoice } = useStore();
 
 const closeModal = () => {
-  useStore().toggleModal();
+  toggleModal();
 };
 
 const closeInvoice = () => {
-  useStore().toggleInvoice();
+  toggleInvoice();
   closeModal();
   if (editInvoice.value) {
     editCurrentInvoice();
@@ -31,7 +32,7 @@ const closeInvoice = () => {
         </button>
         <button
           @click="closeInvoice"
-          class="btn border-none bg-primary hover:bg-primary/50 focus:outline-primary"
+          class="btn border-none bg-primary text-white hover:bg-primary/50 focus:outline-primary"
         >
           Salir
         </button>

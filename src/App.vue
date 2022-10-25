@@ -1,43 +1,28 @@
 <script setup>
+// Dependencies imports
 import { RouterView } from "vue-router";
-// import { ref } from "vue";
 import { useStore } from "@/stores/main";
 import { storeToRefs } from "pinia";
-
+// Components imports
 import NavBar from "./components/NavBar.vue";
 import InvoiceModal from "./components/InvoiceModal.vue";
 import MyModal from "./components/MyModal.vue";
 import CustomModal from "./components/CustomModal.vue";
 
+// Definitions
 const { invoiceDialog, modalActive, customModal, invoicesLoaded, user } =
   storeToRefs(useStore());
 const { getInvoices, fetchUser } = useStore();
 
-// const mobile = ref(null);
-
-// const checkScreen = () => {
-//   const windowWidth = window.innerWidth;
-
-//   if (windowWidth <= 750) {
-//     mobile.value = true;
-//     return;
-//   }
-
-//   mobile.value = false;
-// };
-
-// checkScreen();
-
 getInvoices();
-
 fetchUser();
 </script>
 
 <template>
   <div v-if="invoicesLoaded">
-    <div class="app flex-column flex">
+    <div class="app flex flex-col">
       <NavBar v-if="user" />
-      <div class="app-content flex-column flex">
+      <div class="app-content flex flex-col">
         <MyModal v-if="modalActive" />
         <CustomModal v-if="customModal" />
         <transition name="invoice">
@@ -78,18 +63,18 @@ fetchUser();
   }
 }
 
-.mobile-message {
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #141625;
-  color: #fff;
+// .mobile-message {
+//   text-align: center;
+//   justify-content: center;
+//   align-items: center;
+//   height: 100vh;
+//   background-color: #141625;
+//   color: #fff;
 
-  p {
-    margin-top: 16px;
-  }
-}
+//   p {
+//     margin-top: 16px;
+//   }
+// }
 
 // animated invoice
 
@@ -116,6 +101,20 @@ fetchUser();
   transform: translateX(30px);
   opacity: 0;
 }
+
+// .feature-enter-from {
+//   opacity: 0;
+//   // transform: scale(0.6);
+// }
+
+// .feature-enter-to {
+//   opacity: 1;
+//   // transform: scale(1);
+// }
+
+// .feature-enter-active {
+//   transition: all 0.3s;
+// }
 
 // .page-enter-from,
 // .page-leave-to {

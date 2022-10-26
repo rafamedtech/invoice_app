@@ -161,9 +161,14 @@ const generatePDF = () => {
     <!-- Cover -->
 
     <div
-      class="rounded-[20px] print:hidden lg:print:h-screen lg:print:w-screen"
+      class="relative mb-8 h-fit rounded-[20px] bg-white py-4 shadow-lg print:hidden lg:print:h-screen lg:print:w-screen"
       :class="{ hidden: user }"
     >
+      <h2
+        class="absolute inset-0 top-8 mb-4 block text-center text-xl font-bold uppercase italic text-primary print:block"
+      >
+        Nuestras marcas
+      </h2>
       <picture>
         <source
           media="(max-width: 767px)"
@@ -173,9 +178,14 @@ const generatePDF = () => {
           src="@/assets/images/covermvp.png"
           srcset="@/assets/images/covermvp.png"
           alt=""
-          class="mb-8 rounded-[20px] shadow-lg"
+          class="rounded-[20px]"
         />
       </picture>
+      <div class="absolute bottom-4 right-4 text-xs">
+        <p>Lic. Orlando Toledo Virgen</p>
+        <p>orlando@gcosoluciones.com</p>
+        <p>celular: (622) 118 6556</p>
+      </div>
     </div>
 
     <figure class="hidden print:flex print:h-screen print:items-center">

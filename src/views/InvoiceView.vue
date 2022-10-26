@@ -181,10 +181,17 @@ const generatePDF = () => {
           class="rounded-[20px]"
         />
       </picture>
-      <div class="absolute bottom-4 right-4 text-xs">
-        <p>Lic. Orlando Toledo Virgen</p>
-        <p>orlando@gcosoluciones.com</p>
-        <p>celular: (622) 118 6556</p>
+      <div
+        class="absolute inset-x-4 bottom-4 flex items-center justify-between text-[8px] lg:text-xs"
+      >
+        <div>
+          <p>cotizaciones@gcosoluciones.com</p>
+        </div>
+        <div>
+          <p>Lic. Orlando Toledo Virgen</p>
+          <p>orlando@gcosoluciones.com</p>
+          <p>celular: (622) 118 6556</p>
+        </div>
       </div>
     </div>
 
@@ -216,7 +223,7 @@ const generatePDF = () => {
             <a class="text-[10px]" href="https://www.gcosoluciones.com"
               >www.gcosoluciones.com</a
             >
-            <p class="w-[50ch] text-[8px] lg:w-[70ch]">
+            <p class="w-[40ch] text-[8px] lg:w-[70ch]">
               SISTEMAS DE CONTROL ELÉCTRICO, ELECTRÓNICO, NEUMÁTICO,
               AUTOMATIZACIÓN, FILTRACIÓN, CONTROL DE FLAMA, PRESIÓN,
               TEMPERATURA, BOMBEO, TRATAMIENTO DE AGUA Y ALMACENAMIENTO
@@ -282,7 +289,7 @@ const generatePDF = () => {
                 Tipo de cambio
               </h3>
               <p class="text-[8px] print:text-[8px] lg:text-xs">
-                {{ currentInvoice.exchangeCost }}
+                ${{ currentInvoice.exchangeCost }}
               </p>
             </li>
           </ul>
@@ -291,7 +298,7 @@ const generatePDF = () => {
 
       <!-- Items table -->
       <section
-        class="relative mt-4 min-h-[250px] overflow-x-auto rounded-[20px] bg-white shadow-lg"
+        class="relative mt-4 max-h-[240px] min-h-[240px] overflow-x-auto rounded-[20px] bg-white shadow-lg"
       >
         <div
           class="flex w-[150vw] justify-between gap-2 px-4 text-center text-[10px] print:w-full lg:w-full lg:justify-between lg:gap-2 lg:px-8"
@@ -314,7 +321,9 @@ const generatePDF = () => {
         >
           <p class="w-6 py-2">{{ item.id }}</p>
           <div class="w-72 print:w-[25rem] lg:basis-7/12">
-            <p class="w-full py-2 text-left">{{ item.itemName }}</p>
+            <p class="w-full py-2 text-left print:text-[8px] lg:text-[8px]">
+              {{ item.itemName }}
+            </p>
           </div>
           <p class="py-2 lg:basis-1/12">{{ item.qty }}</p>
           <p class="py-2 lg:basis-1/12">{{ item.partNo }}</p>
@@ -325,19 +334,19 @@ const generatePDF = () => {
             ${{ parseFloat(item.total).toFixed(2) }}
           </p>
         </div>
-        <div class="absolute bottom-4 flex w-full justify-end gap-4 px-4">
+        <!-- <div class="absolute bottom-4 flex w-full justify-end gap-4 px-4">
           <h5 class="text-left text-xs font-bold text-primary">
             Tiempo de entrega
           </h5>
           <p class="text-center text-xs italic">
             {{ currentInvoice.eta }}
           </p>
-        </div>
+        </div> -->
       </section>
 
       <!-- Terms and total sections -->
       <section
-        class="flex w-full flex-col-reverse gap-4 pt-4 print:flex-row lg:flex-row"
+        class="flex w-full flex-col-reverse gap-4 py-4 print:flex-row lg:flex-row"
       >
         <section
           class="flex w-full flex-col gap-4 rounded-[20px] bg-white px-6 py-4 shadow-lg print:w-3/5 print:basis-4/5 print:flex-row print:pr-0 lg:w-4/5 lg:flex-row"
@@ -346,7 +355,9 @@ const generatePDF = () => {
             <h3 class="mb-2 w-fit border-b-2 border-primary text-[#1a1a1a]">
               Condiciones del servicio
             </h3>
-            <p class="w-[50ch] text-[8px] italic print:w-full lg:w-[80ch]">
+            <p
+              class="w-[50ch] text-[8px] italic print:w-full print:text-[8px] lg:w-[80ch]"
+            >
               AGRADECIENDO SU AMABLE PREFERENCIA NOS ES GRATO SOMETER A SU
               CONSIDERACION NUESTRA COTIZACION DE ACUERDO A SU REQUERIMIENTO,
               ESPERANDO SEA SATISFACTORIA A SUS NECESIDADES, LOS PRECIOS
@@ -393,7 +404,7 @@ const generatePDF = () => {
     <section class="mt-8 lg:print:h-screen lg:print:w-screen">
       <img src="../assets/logo-bgremoved.png" class="mb-2 h-24" alt="" />
       <div
-        class="relative flex h-[500px] w-full items-center rounded-[20px] bg-white py-12 px-8 text-xs shadow-lg print:px-40 lg:px-80 lg:text-base"
+        class="relative flex h-[450px] w-full items-center rounded-[20px] bg-white py-12 px-8 text-xs shadow-lg print:px-40 lg:px-80 lg:text-base"
       >
         <h2
           class="absolute inset-0 top-4 h-fit text-center text-xl font-bold uppercase italic text-primary print:block lg:block"
@@ -407,13 +418,13 @@ const generatePDF = () => {
           {{ currentInvoice.features.text }}
         </p>
         <figure
-          class="flex h-full items-center"
+          class="mx-auto flex h-full items-center"
           v-if="currentInvoice.featureType === 'imagen'"
         >
           <img
             :src="currentInvoice.features.image"
             alt=""
-            class="mb-4 rounded-[20px]"
+            class="mb-4 h-auto rounded-[20px] print:h-full lg:h-full"
           />
         </figure>
         <!-- <picture>

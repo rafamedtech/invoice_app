@@ -188,8 +188,20 @@ const generatePDF = () => {
       </div>
     </div>
 
-    <figure class="hidden print:flex print:h-screen print:items-center">
+    <figure
+      class="relative hidden print:flex print:h-screen print:items-center"
+    >
+      <h2
+        class="absolute inset-0 top-8 mb-4 block text-center text-xl font-bold uppercase italic text-primary print:block"
+      >
+        Nuestras marcas
+      </h2>
       <img src="@/assets/images/covermvp.png" alt="" />
+      <div class="absolute bottom-4 right-4 text-xs">
+        <p>Lic. Orlando Toledo Virgen</p>
+        <p>orlando@gcosoluciones.com</p>
+        <p>celular: (622) 118 6556</p>
+      </div>
     </figure>
 
     <!-- Invoice body -->

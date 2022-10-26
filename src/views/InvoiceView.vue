@@ -204,10 +204,17 @@ const generatePDF = () => {
         Nuestras marcas
       </h2>
       <img src="@/assets/images/covermvp.png" alt="" />
-      <div class="absolute bottom-4 right-4 text-xs">
-        <p>Lic. Orlando Toledo Virgen</p>
-        <p>orlando@gcosoluciones.com</p>
-        <p>celular: (622) 118 6556</p>
+      <div
+        class="absolute inset-x-4 bottom-4 flex items-center justify-between text-[8px] lg:text-xs"
+      >
+        <div>
+          <p>cotizaciones@gcosoluciones.com</p>
+        </div>
+        <div>
+          <p>Lic. Orlando Toledo Virgen</p>
+          <p>orlando@gcosoluciones.com</p>
+          <p>celular: (622) 118 6556</p>
+        </div>
       </div>
     </figure>
 

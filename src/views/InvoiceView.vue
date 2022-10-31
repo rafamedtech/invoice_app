@@ -416,7 +416,7 @@ const generatePDF = () => {
     <section class="mt-8 lg:print:h-screen lg:print:w-screen">
       <img src="../assets/logo-bgremoved.png" class="mb-2 h-24" alt="" />
       <div
-        class="relative flex w-full flex-col items-center rounded-[20px] bg-white py-8 px-8 text-xs shadow-lg print:h-[70vh] lg:h-[70vh] lg:text-base"
+        class="relative flex w-full flex-col items-center rounded-[20px] bg-white py-8 px-8 text-xs shadow-lg print:h-[70vh] print:max-h-[70vh] lg:h-[70vh] lg:text-base"
       >
         <h2
           class="inset-0 top-4 h-fit text-center text-xl font-bold uppercase italic text-primary print:block lg:block"

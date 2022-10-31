@@ -14,9 +14,11 @@
     @apply text-xs;
   }
 
-  /* [data-theme="mytheme"] p {
-    color: black;
-  } */
+  @media print {
+    .print\:hidden {
+      display: none;
+    }
+  }
 }
 
 @layer utilities {

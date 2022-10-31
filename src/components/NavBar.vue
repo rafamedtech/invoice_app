@@ -43,6 +43,10 @@ header {
     position: fixed;
   }
 
+  @media print {
+    display: none;
+  }
+
   .branding {
     // border-radius: 0 20px 20px 0;
     // background-color: #e90f02;

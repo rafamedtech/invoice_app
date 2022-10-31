@@ -15,7 +15,7 @@
   }
 
   @media print {
-    .print\:hidden {
+    .pdf {
       display: none;
     }
   }

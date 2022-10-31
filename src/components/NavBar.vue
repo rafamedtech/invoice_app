@@ -12,7 +12,7 @@ const userLogout = () => {
 
 <template>
   <header
-    class="flex flex-col justify-between shadow-sm print:hidden lg:shadow-lg lg:print:hidden"
+    class="flex flex-col justify-between shadow-sm print:hidden lg:shadow-lg"
   >
     <div class="branding flex w-28 items-center bg-white lg:w-24">
       <img

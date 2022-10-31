@@ -13,10 +13,13 @@ import LoadingSpinner from "@/components/LoadingSpinner.vue";
 const state = reactive({
   dateOptions: { year: "numeric", month: "short", day: "numeric" },
   docId: null,
+  invId: null,
   loading: null,
-  clientName: null,
   clientCompany: null,
+  clientName: null,
+  clientName2: null,
   clientEmail: null,
+  clientEmail2: null,
   invoiceDateUnix: null,
   invoiceDate: null,
   paymentTerms: 1,
@@ -130,9 +133,12 @@ const uploadInvoice = async () => {
 
   await addDoc(collection(db, "invoices"), {
     invoiceId: uid(6),
-    clientName: state.clientName,
+    invId: state.invId,
     clientCompany: state.clientCompany,
+    clientName: state.clientName,
+    clientName2: state.clientName2,
     clientEmail: state.clientEmail,
+    clientEmail2: state.clientEmail2,
     currencyType: state.currencyType,
     exchangeCost: state.exchangeCost,
     eta: state.eta,
@@ -175,9 +181,12 @@ const updateInvoice = async () => {
   const docRef = doc(db, "invoices", state.docId);
 
   await updateDoc(docRef, {
-    clientName: state.clientName,
+    invId: state.invId,
     clientCompany: state.clientCompany,
+    clientName: state.clientName,
+    clientName2: state.clientName2,
     clientEmail: state.clientEmail,
+    clientEmail2: state.clientEmail2,
     currencyType: state.currencyType,
     exchangeCost: state.exchangeCost,
     eta: state.eta,
@@ -224,9 +233,12 @@ if (!editInvoice.value) {
 
 if (editInvoice.value) {
   state.docId = currentInvoice.value.docId;
-  state.clientName = currentInvoice.value.clientName;
+  state.invId = currentInvoice.value.invId;
   state.clientCompany = currentInvoice.value.clientCompany;
+  state.clientName = currentInvoice.value.clientName;
+  state.clientName2 = currentInvoice.value.clientName2;
   state.clientEmail = currentInvoice.value.clientEmail;
+  state.clientEmail2 = currentInvoice.value.clientEmail2;
   state.currencyType = currentInvoice.value.currencyType;
   state.exchangeCost = currentInvoice.value.exchangeCost;
   state.eta = currentInvoice.value.eta;
@@ -283,19 +295,19 @@ watchEffect(() => {
         </h1>
 
         <!-- Bill To -->
-        <div class="bill-to flex-column flex gap-4">
+        <div class="bill-to flex flex-col gap-4">
           <h4 class="text-primary">Datos generales</h4>
-          <div class="flex-column flex">
-            <label for="clientName">Nombre del cliente</label>
+          <div class="flex w-full flex-col">
+            <label for="clientCompany">ID</label>
             <input
-              class="focus:ring-primary"
+              class="w-1/2 gap-8 rounded-[10px] border-none focus:ring-primary"
               required
               type="text"
-              id="clientName"
-              v-model="state.clientName"
+              id="invoiceID"
+              v-model="state.invId"
             />
           </div>
-          <div class="flex-column flex">
+          <div class="flex flex-col">
             <label for="clientCompany">Empresa</label>
             <input
               class="focus:ring-primary"
@@ -305,15 +317,55 @@ watchEffect(() => {
               v-model="state.clientCompany"
             />
           </div>
-          <div class="flex-column flex">
-            <label for="clientEmail">Correo electrónico</label>
-            <input
-              class="focus:ring-primary"
-              required
-              type="email"
-              id="clientEmail"
-              v-model="state.clientEmail"
-            />
+          <div class="flex w-full gap-8">
+            <div class="mb-2 w-1/2">
+              <h4 class="mb-2 w-fit border-b border-black text-primary">
+                Contacto 1
+              </h4>
+              <div class="mb-2 flex flex-col">
+                <label for="clientName">Nombre</label>
+                <input
+                  class="focus:ring-primary"
+                  required
+                  type="text"
+                  id="clientName"
+                  v-model="state.clientName"
+                />
+              </div>
+              <div class="flex flex-col">
+                <label for="clientEmail">Correo electrónico</label>
+                <input
+                  class="focus:ring-primary"
+                  required
+                  type="email"
+                  id="clientEmail"
+                  v-model="state.clientEmail"
+                />
+              </div>
+            </div>
+            <div class="mb-2 w-1/2">
+              <h4 class="mb-2 w-fit border-b border-black text-primary">
+                Contacto 2
+              </h4>
+              <div class="mb-2 flex flex-col">
+                <label for="clientName">Nombre</label>
+                <input
+                  class="focus:ring-primary"
+                  type="text"
+                  id="clientName"
+                  v-model="state.clientName2"
+                />
+              </div>
+              <div class="flex-column flex">
+                <label for="clientEmail">Correo electrónico</label>
+                <input
+                  class="focus:ring-primary"
+                  type="email"
+                  id="clientEmail"
+                  v-model="state.clientEmail2"
+                />
+              </div>
+            </div>
           </div>
 
           <div class="location-details flex">
@@ -408,6 +460,7 @@ watchEffect(() => {
             <h3 class="mb-4 text-primary">Artículos</h3>
             <table class="item-list">
               <tr class="table-heading flex">
+                <th class="item-id">ID</th>
                 <th class="item-name">Descripción</th>
                 <th class="qty">Ctd</th>
                 <th class="price"># Parte</th>
@@ -420,9 +473,16 @@ watchEffect(() => {
                   v-for="(item, index) in state.invoiceItemList"
                   :key="index"
                 >
+                  <td class="item-id">
+                    <input
+                      class="rounded-[16px] border-none focus:ring-primary"
+                      type="text"
+                      v-model="item.id"
+                    />
+                  </td>
                   <td class="item-name">
                     <textarea
-                      class="w-full rounded-[16px] border-none focus:ring-primary"
+                      class="h-10 w-full rounded-[10px] border-none focus:ring-primary"
                       type="text"
                       v-model="item.itemName"
                     ></textarea>
@@ -500,7 +560,7 @@ watchEffect(() => {
                 />
               </div>
             </fieldset>
-            <div class="h-28">
+            <div class="h-60">
               <Transition name="feature" mode="out-in">
                 <textarea
                   v-if="state.featureType === 'texto'"
@@ -542,7 +602,7 @@ watchEffect(() => {
             <label for="notes">Notas</label>
             <textarea
               id="notes"
-              class="rounded-[16px] border-none focus:ring-primary"
+              class="h-60 rounded-[16px] border-none focus:ring-primary"
               v-model="state.notes"
             ></textarea>
           </div>
@@ -738,6 +798,10 @@ watchEffect(() => {
             gap: 16px;
             // font-size: 12px;
 
+            .item-id {
+              flex-basis: 10%;
+            }
+
             .item-name {
               flex-basis: 40%;
               // flex-basis: 30%;
@@ -825,7 +889,7 @@ watchEffect(() => {
     // background-color: transparent !important;
   }
 
-  input:not([type="radio"]),
+  input:not([type="radio"]):not(#invoiceID),
   select {
     width: 100%;
     // background-color: #fff;

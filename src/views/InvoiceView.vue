@@ -37,7 +37,11 @@ const sendEmail = () => {
       "template_gw5kvf9",
       {
         customer_name: currentInvoice.value.clientName.split(" ")[0],
+        customer_name2: currentInvoice.value.clientName2
+          ? currentInvoice.value.clientName2.split(" ")[0]
+          : "",
         customer_email: currentInvoice.value.clientEmail,
+        customer_email2: currentInvoice.value.clientEmail2,
         message: location.toString(),
       },
       "QyWKNAO42Ukv7v_0T"
@@ -68,9 +72,6 @@ const generatePDF = () => {
     modalType: "print",
   });
 };
-// const generatePDF = () => {
-//   window.print();
-// };
 </script>
 
 <template>
@@ -230,7 +231,7 @@ const generatePDF = () => {
             <a class="text-[10px]" href="https://www.gcosoluciones.com"
               >www.gcosoluciones.com</a
             >
-            <p class="w-[40ch] text-[8px] lg:w-[70ch]">
+            <p class="w-[40ch] text-[6px] lg:w-[70ch]">
               SISTEMAS DE CONTROL ELÉCTRICO, ELECTRÓNICO, NEUMÁTICO,
               AUTOMATIZACIÓN, FILTRACIÓN, CONTROL DE FLAMA, PRESIÓN,
               TEMPERATURA, BOMBEO, TRATAMIENTO DE AGUA Y ALMACENAMIENTO
@@ -242,7 +243,7 @@ const generatePDF = () => {
             Cotización
           </h1>
           <div class="flex flex-col items-end">
-            <p class="font-bold uppercase">#{{ currentInvoice.invoiceId }}</p>
+            <p class="font-bold uppercase">#{{ currentInvoice.invId }}</p>
 
             <h3 class="text-[9px] text-primary lg:text-base">Fecha</h3>
             <p class="text-[10px]">{{ currentInvoice.invoiceDate }}</p>
@@ -267,6 +268,9 @@ const generatePDF = () => {
               </h3>
               <p class="text-[8px] print:text-[8px] lg:text-xs">
                 {{ currentInvoice.clientName }}
+              </p>
+              <p class="text-[8px] print:text-[8px] lg:text-xs">
+                {{ currentInvoice.clientName2 }}
               </p>
             </li>
             <li class="text-center">
@@ -296,7 +300,8 @@ const generatePDF = () => {
                 Tipo de cambio
               </h3>
               <p class="text-[8px] print:text-[8px] lg:text-xs">
-                ${{ currentInvoice.exchangeCost }}
+                {{ currentInvoice.exchangeCost ? "$" : ""
+                }}{{ currentInvoice.exchangeCost }}
               </p>
             </li>
           </ul>
@@ -328,7 +333,7 @@ const generatePDF = () => {
         >
           <p class="w-6 py-2">{{ item.id }}</p>
           <div class="w-72 print:w-[25rem] lg:basis-7/12">
-            <p class="w-full py-2 text-left print:text-[8px] lg:text-[8px]">
+            <p class="w-full py-2 text-left print:text-[8px]">
               {{ item.itemName }}
             </p>
           </div>
@@ -411,45 +416,48 @@ const generatePDF = () => {
     <section class="mt-8 lg:print:h-screen lg:print:w-screen">
       <img src="../assets/logo-bgremoved.png" class="mb-2 h-24" alt="" />
       <div
-        class="relative flex h-[450px] w-full items-center rounded-[20px] bg-white py-12 px-8 text-xs shadow-lg print:px-40 lg:px-80 lg:text-base"
+        class="relative flex w-full flex-col items-center rounded-[20px] bg-white py-8 px-8 text-xs shadow-lg lg:h-[70vh] lg:text-base"
       >
         <h2
-          class="absolute inset-0 top-4 h-fit text-center text-xl font-bold uppercase italic text-primary print:block lg:block"
+          class="inset-0 top-4 h-fit text-center text-xl font-bold uppercase italic text-primary print:block lg:block"
         >
           Ficha Técnica
         </h2>
-        <p
-          class="w-full text-center"
-          v-if="currentInvoice.featureType === 'texto'"
-        >
-          {{ currentInvoice.features.text }}
-        </p>
-        <figure
-          class="mx-auto flex h-full items-center"
-          v-if="currentInvoice.featureType === 'imagen'"
-        >
-          <img
-            :src="currentInvoice.features.image"
-            alt=""
-            class="mb-4 h-auto rounded-[20px] print:h-full lg:h-full"
-          />
-        </figure>
-        <!-- <picture>
-          <source
-            media="(max-width: 767px)"
-            srcset="@/assets/images/coverdemomobile.png"
-          />
-          <img
-            src="@/assets/images/coverdemo.png"
-            srcset="@/assets/images/coverdemo.png"
-            alt=""
-            class="mb-4 rounded-[20px]"
-          />
-        </picture> -->
+        <section class="h-full overflow-hidden">
+          <div class="container mx-auto h-full px-5 py-8">
+            <div
+              class="mx-auto flex h-full flex-col items-center justify-center gap-8 print:w-full print:flex-row print:flex-nowrap lg:flex-row"
+            >
+              <figure
+                v-if="currentInvoice.features.image"
+                class="h-full rounded"
+                :class="{
+                  'print:w-1/2 lg:w-auto': currentInvoice.features.text,
+                  'mx-auto print:w-1/2 lg:h-full lg:w-full':
+                    !currentInvoice.features.text,
+                }"
+              >
+                <img
+                  class="h-full w-full"
+                  alt="ecommerce"
+                  :src="currentInvoice.features.image"
+                />
+              </figure>
+              <div
+                v-if="currentInvoice.features.text"
+                class="w-full basis-1/2 leading-tight lg:mt-0 lg:w-1/2"
+              >
+                <p class="mx-auto h-full w-full basis-1/2 text-[10px]">
+                  {{ currentInvoice.features.text }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
       <section class="mt-4 flex justify-end">
-        <ul class="mr-0 flex flex-col">
-          <li>
+        <ul class="mr-0 flex gap-8">
+          <li class="flex items-center gap-2">
             <i
               v-if="currentInvoice.condition === 'nuevo'"
               class="fa-regular fa-circle-check text-xl text-green-500"
@@ -460,7 +468,7 @@ const generatePDF = () => {
             ></i>
             Nuevo
           </li>
-          <li>
+          <li class="flex items-center gap-2">
             <i
               v-if="currentInvoice.condition === 'usado'"
               class="fa-regular fa-circle-check text-xl text-green-500"
@@ -471,7 +479,7 @@ const generatePDF = () => {
             ></i>
             Usado
           </li>
-          <li>
+          <li class="flex items-center gap-2">
             <i
               v-if="currentInvoice.condition === 'refurbished'"
               class="fa-regular fa-circle-check text-xl text-green-500"

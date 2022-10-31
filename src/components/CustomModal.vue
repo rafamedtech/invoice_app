@@ -36,12 +36,18 @@ const createPDF = () => {
     <div class="modal-content margin-2">
       <!-- Email dialog -->
       <div v-if="modalType === 'email'">
-        <p>
-          La cotización fue enviada exitosamente a
+        <p>La cotización fue enviada exitosamente a los siguientes correos:</p>
+        <div class="mx-auto w-full text-center">
           <span class="italic text-primary">{{
             currentInvoice.clientEmail
           }}</span>
-        </p>
+          <br />
+          <span
+            v-if="currentInvoice.clientEmail2"
+            class="italic text-primary"
+            >{{ currentInvoice.clientEmail2 }}</span
+          >
+        </div>
         <div class="my-actions mx-auto flex w-fit gap-2">
           <button
             @click="closeModal"

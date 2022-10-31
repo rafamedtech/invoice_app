@@ -9,10 +9,12 @@ defineProps(["invoice"]);
   >
     <div class="left flex">
       <span class="tracking-number text-xs lg:text-base"
-        >#{{ invoice.invoiceId }}</span
+        >#{{ invoice.invId }}</span
       >
       <span class="due-date hidden lg:block">{{ invoice.paymentDueDate }}</span>
-      <span class="person text-xs lg:text-base">{{ invoice.clientName }}</span>
+      <span class="person text-xs lg:text-base">{{
+        invoice.clientCompany
+      }}</span>
     </div>
     <div class="right flex">
       <span class="price"

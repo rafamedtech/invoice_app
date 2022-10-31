@@ -38,7 +38,7 @@ const filteredData = computed(() => {
     if (filteredInvoice.value === "Pendiente") {
       return invoice.invoicePending === true;
     }
-    if (filteredInvoice.value === "Pagada") {
+    if (filteredInvoice.value === "Vendido") {
       return invoice.invoicePaid === true;
     }
 
@@ -75,7 +75,7 @@ getInvoices();
             <ul v-show="filterMenu" class="filter-menu lg:mr-10">
               <li @click="filteredInvoices">Borrador</li>
               <li @click="filteredInvoices">Pendiente</li>
-              <li @click="filteredInvoices">Pagada</li>
+              <li @click="filteredInvoices">Vendido</li>
               <li @click="filteredInvoices">Todas</li>
             </ul>
           </div>

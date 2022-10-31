@@ -41,10 +41,13 @@ export const useStore = defineStore("main", () => {
       if (!invoiceData.value.some((invoice) => invoice.docId === doc.id)) {
         const data = {
           docId: doc.id,
+          invId: doc.data().invId,
           invoiceId: doc.data().invoiceId,
-          clientName: doc.data().clientName,
           clientCompany: doc.data().clientCompany,
+          clientName: doc.data().clientName,
+          clientName2: doc.data().clientName2,
           clientEmail: doc.data().clientEmail,
+          clientEmail2: doc.data().clientEmail2,
           currencyType: doc.data().currencyType,
           exchangeCost: doc.data().exchangeCost,
           eta: doc.data().eta,

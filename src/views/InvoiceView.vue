@@ -162,7 +162,7 @@ const generatePDF = () => {
     <!-- Cover -->
 
     <div
-      class="relative mb-8 h-fit rounded-[20px] bg-white py-4 shadow-lg print:hidden lg:print:h-[70vh] lg:print:w-screen"
+      class="relative mb-8 h-fit rounded-[20px] bg-white py-4 shadow-lg print:hidden lg:print:h-screen lg:print:w-screen"
       :class="{ hidden: user }"
     >
       <h2
@@ -197,7 +197,7 @@ const generatePDF = () => {
     </div>
 
     <figure
-      class="relative hidden print:flex print:h-screen print:items-center"
+      class="relative hidden print:flex print:h-[70vh] print:items-center"
     >
       <h2
         class="absolute inset-0 top-8 mb-4 block text-center text-xl font-bold uppercase italic text-primary print:block"

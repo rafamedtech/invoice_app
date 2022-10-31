@@ -13,12 +13,6 @@
   td {
     @apply text-xs;
   }
-
-  @media print {
-    .pdf {
-      display: none;
-    }
-  }
 }
 
 @layer utilities {

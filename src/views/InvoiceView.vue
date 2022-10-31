@@ -162,7 +162,7 @@ const generatePDF = () => {
     <!-- Cover -->
 
     <div
-      class="relative mb-8 h-fit rounded-[20px] bg-white py-4 shadow-lg print:hidden lg:print:h-screen lg:print:w-screen"
+      class="relative mb-8 h-fit rounded-[20px] bg-white py-4 shadow-lg print:hidden lg:print:h-[70vh] lg:print:w-screen"
       :class="{ hidden: user }"
     >
       <h2
@@ -416,7 +416,7 @@ const generatePDF = () => {
     <section class="mt-8 lg:print:h-screen lg:print:w-screen">
       <img src="../assets/logo-bgremoved.png" class="mb-2 h-24" alt="" />
       <div
-        class="relative flex w-full flex-col items-center rounded-[20px] bg-white py-8 px-8 text-xs shadow-lg lg:h-[70vh] lg:text-base"
+        class="relative flex w-full flex-col items-center rounded-[20px] bg-white py-8 px-8 text-xs shadow-lg print:h-[70vh] lg:h-[70vh] lg:text-base"
       >
         <h2
           class="inset-0 top-4 h-fit text-center text-xl font-bold uppercase italic text-primary print:block lg:block"
@@ -432,7 +432,8 @@ const generatePDF = () => {
                 v-if="currentInvoice.features.image"
                 class="h-full rounded"
                 :class="{
-                  'print:w-1/2 lg:w-auto': currentInvoice.features.text,
+                  'print:h-auto print:w-1/2 lg:w-auto':
+                    currentInvoice.features.text,
                   'mx-auto print:w-1/2 lg:h-full lg:w-full':
                     !currentInvoice.features.text,
                 }"
@@ -506,65 +507,6 @@ const generatePDF = () => {
     </div>
   </main>
 </template>
-
-<!-- <table class="relative table w-full px-8">
-          head
-          <thead>
-            <tr class="text-xs">
-              <th class="bg-white py-2 pl-8 text-xs text-primary">ID</th>
-              <th class="bg-white px-4 py-2 text-xs text-primary">
-                Descripción
-              </th>
-              <th class="bg-white px-4 py-2 text-center text-xs text-primary">
-                Cantidad
-              </th>
-              <th class="bg-white px-4 py-2 text-center text-xs text-primary">
-                No. parte
-              </th>
-              <th class="bg-white px-4 py-2 text-center text-xs text-primary">
-                Precio unitario
-              </th>
-              <th
-                class="bg-white py-2 pl-4 pr-8 text-center text-xs text-primary"
-              >
-                Importe
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-             rows 
-            <tr
-              v-for="(item, index) in currentInvoice.invoiceItemList"
-              :key="index"
-            >
-              <th class="py-2 pl-8 pr-0">{{ item.id }}</th>
-              <td class="block px-4 py-2 text-[9px]">
-                {{ item.itemName }}
-              </td>
-              <td class="px-0 py-2 text-center">{{ item.qty }}</td>
-              <td class="px-0 py-2 text-center">{{ item.partNo }}</td>
-              <td class="px-0 py-2 text-center">
-                ${{ parseFloat(item.price).toFixed(2) }}
-              </td>
-              <td class="py-2 pl-0 pr-4 text-center">
-                ${{ parseFloat(item.total).toFixed(2) }}
-              </td>
-            </tr>
-
-            <tr>
-              <th></th>
-              <td class="px-0 py-2 text-left text-xs font-bold text-primary">
-                Tiempo de entrega
-              </td>
-              <td class="px-8 py-2 text-center text-xs italic">
-                {{ currentInvoice.eta }}
-              </td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table> -->
 
 <style lang="scss" scoped>
 .pdf {

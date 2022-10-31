@@ -567,6 +567,11 @@ const generatePDF = () => {
         </table> -->
 
 <style lang="scss" scoped>
+.pdf {
+  @media print {
+    display: none;
+  }
+}
 .invoice-view {
   .nav-link {
     margin-top: 16px;

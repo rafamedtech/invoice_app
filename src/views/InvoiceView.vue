@@ -495,7 +495,7 @@ const generatePDF = () => {
     </section>
 
     <!-- Crear PDF usuario -->
-    <div class="flex justify-center print:hidden" v-if="!user">
+    <div class="pdf flex justify-center print:hidden" v-if="!user">
       <button
         @click="generatePDF"
         class="mt-8 flex h-14 w-40 flex-row items-center justify-center gap-2 rounded-[10px] border-none bg-primary px-10 py-6 text-xs text-white transition-all hover:-translate-y-[1px] hover:shadow-lg"

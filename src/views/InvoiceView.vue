@@ -101,9 +101,24 @@ const generatePDF = () => {
               pending: currentInvoice.invoicePending,
             }"
           >
-            <span v-if="currentInvoice.invoicePaid">Vendido</span>
+            <span
+              class="flex items-center gap-2"
+              v-if="currentInvoice.invoicePaid"
+              ><i
+                class="fa-regular fa-circle-check text-base text-green-500"
+              ></i>
+              Vendido</span
+            >
             <span v-if="currentInvoice.invoiceDraft">Borrador</span>
-            <span v-if="currentInvoice.invoicePending">Pendiente</span>
+            <span
+              class="flex items-center gap-2"
+              v-if="currentInvoice.invoicePending"
+            >
+              <i
+                class="fa-solid fa-circle-exclamation text-base text-secondary"
+              ></i>
+              Pendiente</span
+            >
           </div>
         </div>
 
@@ -196,7 +211,7 @@ const generatePDF = () => {
       </div>
     </div>
     <div
-      class="relative mb-8 hidden h-fit rounded-[20px] bg-white py-4 shadow-lg print:flex print:h-[90vh] print:items-center lg:print:h-screen lg:print:w-screen"
+      class="relative mb-8 hidden h-fit rounded-[20px] bg-white py-4 shadow-lg print:flex print:h-[700px] print:items-center lg:print:h-screen lg:print:w-screen"
     >
       <h2
         class="absolute inset-0 top-8 mb-4 block text-center text-xl font-bold uppercase italic text-primary print:block"
@@ -340,17 +355,29 @@ const generatePDF = () => {
           class="flex w-[150vw] justify-between gap-2 px-4 text-[10px] print:w-full lg:w-full lg:justify-between lg:gap-2 lg:px-8"
         >
           <!-- <h5 class="w-6 py-2 font-bold text-primary">ID</h5> -->
-          <h5 class="py-2 font-bold text-primary lg:basis-2/12">No parte</h5>
-          <div class="w-72 print:w-[25rem] lg:basis-6/12">
-            <h5 class="w-full py-2 font-bold text-primary">Descripción</h5>
+          <h5
+            class="py-2 font-bold text-primary print:w-1/12 print:basis-1/12 lg:basis-[10%]"
+          >
+            No parte
+          </h5>
+          <div class="w-72 print:w-7/12 lg:basis-7/12">
+            <h5 class="w-full py-2 text-center font-bold text-primary">
+              Descripción
+            </h5>
           </div>
-          <h5 class="py-2 text-center font-bold text-primary lg:basis-1/12">
+          <h5
+            class="py-2 text-center font-bold text-primary print:w-1/12 lg:basis-1/12"
+          >
             Cantidad
           </h5>
-          <h5 class="py-2 text-center font-bold text-primary lg:basis-1/12">
+          <h5
+            class="py-2 text-center font-bold text-primary print:w-2/12 lg:basis-1/12"
+          >
             Precio unitario
           </h5>
-          <h5 class="w-12 py-2 text-right font-bold text-primary">Importe</h5>
+          <h5 class="w-12 py-2 text-right font-bold text-primary print:w-1/12">
+            Importe
+          </h5>
         </div>
         <div
           class="flex w-[150vw] justify-between gap-2 px-4 text-[10px] print:w-full lg:w-full lg:justify-between lg:gap-2 lg:px-8"
@@ -358,18 +385,34 @@ const generatePDF = () => {
           :key="index"
         >
           <!-- <p class="w-6 py-2">{{ item.id }}</p> -->
-          <p class="py-2 lg:basis-2/12">{{ item.partNo }}</p>
-          <div class="w-72 print:w-[25rem] lg:basis-6/12">
+          <p
+            class="py-2 print:w-1/12 print:basis-1/12 print:text-[8px] lg:basis-[10%]"
+          >
+            {{ item.partNo }}
+          </p>
+          <div class="w-72 print:w-7/12 lg:basis-7/12">
             <p class="w-full py-2 text-left print:text-[8px]">
               {{ item.itemName }}
             </p>
           </div>
-          <p class="py-2 text-center lg:basis-1/12">{{ item.qty }}</p>
-          <p class="py-2 text-center lg:basis-1/12">
-            ${{ parseFloat(item.price).toFixed(2) }}
+          <p class="py-2 text-center print:w-1/12 lg:basis-1/12">
+            {{ item.qty }}
           </p>
-          <p class="w-12 py-2 text-right">
-            ${{ parseFloat(item.total).toFixed(2) }}
+          <p class="py-2 text-center print:w-2/12 lg:basis-1/12">
+            {{
+              new Intl.NumberFormat("es-MX", {
+                style: "currency",
+                currency: "MXN",
+              }).format(item.price)
+            }}
+          </p>
+          <p class="w-12 py-2 text-right print:w-1/12">
+            {{
+              new Intl.NumberFormat("es-MX", {
+                style: "currency",
+                currency: "MXN",
+              }).format(item.total)
+            }}
           </p>
         </div>
         <!-- <div class="absolute bottom-4 flex w-full justify-end gap-4 px-4">
@@ -425,15 +468,34 @@ const generatePDF = () => {
             </div>
             <div class="flex flex-col items-end gap-2 text-xs">
               <p>
-                ${{ parseFloat(currentInvoice.invoiceSubtotal).toFixed(2) }}
+                {{
+                  new Intl.NumberFormat("es-MX", {
+                    style: "currency",
+                    currency: "MXN",
+                  }).format(currentInvoice.invoiceSubtotal)
+                }}
               </p>
-              <p>${{ parseFloat(currentInvoice.invoiceTax).toFixed(2) }}</p>
+              <p>
+                {{
+                  new Intl.NumberFormat("es-MX", {
+                    style: "currency",
+                    currency: "MXN",
+                  }).format(currentInvoice.invoiceTax)
+                }}
+              </p>
             </div>
           </div>
           <div class="divide divider my-0 w-full"></div>
           <div class="flex w-full justify-between font-bold">
             <p class="text-primary">Total</p>
-            <p>${{ parseFloat(currentInvoice.invoiceTotal).toFixed(2) }}</p>
+            <p>
+              {{
+                new Intl.NumberFormat("es-MX", {
+                  style: "currency",
+                  currency: "MXN",
+                }).format(currentInvoice.invoiceTotal)
+              }}
+            </p>
           </div>
         </section>
       </section>
@@ -442,7 +504,7 @@ const generatePDF = () => {
     <section class="mt-8 lg:print:h-screen lg:print:w-screen">
       <img src="../assets/logo-bgremoved.png" class="mb-2 h-24" alt="" />
       <div
-        class="relative flex w-full flex-col items-center rounded-[20px] bg-white py-8 px-8 text-xs shadow-lg print:h-[60vh] print:max-h-[60vh] lg:h-[70vh] lg:text-base"
+        class="relative flex w-full flex-col items-center rounded-[20px] bg-white py-8 px-8 text-xs shadow-lg print:h-[500px] print:max-h-[500px] lg:h-[70vh] lg:text-base"
       >
         <h2
           class="inset-0 top-4 h-fit text-center text-xl font-bold uppercase italic text-primary print:block lg:block"
@@ -569,7 +631,7 @@ const generatePDF = () => {
       align-items: center;
 
       span {
-        color: #1a1a1a;
+        // color: #1a1a1a;
         // color: #dfe3fa;
         margin-right: 16px;
       }

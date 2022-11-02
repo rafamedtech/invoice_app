@@ -526,10 +526,11 @@ watchEffect(() => {
                     />
                   </td>
                   <td class="total flex h-10 items-center">
-                    ${{
-                      parseFloat((item.total = item.qty * item.price)).toFixed(
-                        2
-                      )
+                    {{
+                      new Intl.NumberFormat("es-MX", {
+                        style: "currency",
+                        currency: "MXN",
+                      }).format((item.total = item.qty * item.price))
                     }}
                   </td>
                   <i

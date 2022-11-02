@@ -8,7 +8,7 @@ defineProps(["invoice"]);
     class="invoice relative flex py-7 px-4 transition-all duration-300 hover:shadow-lg focus:outline-primary lg:px-8"
   >
     <div class="left flex">
-      <span class="tracking-number text-xs lg:text-base"
+      <span class="tracking-number text-[8px] lg:text-xs"
         >#{{ invoice.invId }}</span
       >
       <span class="due-date hidden lg:block">{{ invoice.paymentDueDate }}</span>
@@ -17,11 +17,17 @@ defineProps(["invoice"]);
       }}</span>
     </div>
     <div class="right flex">
-      <span class="price"
+      <span class="price">{{
+        new Intl.NumberFormat("es-MX", {
+          style: "currency",
+          currency: "MXN",
+        }).format(invoice.invoiceTotal)
+      }}</span>
+      <!-- <span class="price"
         >${{ parseFloat(invoice.invoiceTotal).toFixed(2) }}</span
-      >
+      > -->
       <div
-        class="status-button absolute inset-0 flex gap-2 py-2 px-4 lg:static lg:mr-2 lg:px-8"
+        class="status-button absolute inset-0 flex gap-2 rounded-[20px] py-2 px-4 lg:static lg:mr-2 lg:rounded-[10px] lg:px-8"
         :class="{
           paid: invoice.invoicePaid,
           draft: invoice.invoiceDraft,

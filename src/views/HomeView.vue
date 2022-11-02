@@ -1,6 +1,6 @@
 <script setup>
 // Imports
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useStore } from "@/stores/main";
 import { storeToRefs } from "pinia";
 
@@ -46,6 +46,14 @@ const filteredData = computed(() => {
   });
 });
 
+watch(filteredInvoice, () => {
+  filteredData.value = invoiceData.value.filter((item) =>
+    item.clientCompany
+      .toLowerCase()
+      .includes(filteredInvoice.value.toLowerCase())
+  );
+});
+
 getInvoices();
 </script>
 
@@ -60,6 +68,7 @@ getInvoices();
             >Tienes (<span class="text-primary">{{ invoiceData.length }}</span
             >) en total</span
           >
+          <!-- <input type="text" v-model="filteredInvoice" /> -->
         </div>
         <div
           class="right flex flex-col-reverse items-end gap-4 lg:flex-row lg:items-center"

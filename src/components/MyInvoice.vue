@@ -5,7 +5,7 @@ defineProps(["invoice"]);
 <template>
   <router-link
     :to="{ name: 'Invoice', params: { invoiceId: invoice.invoiceId } }"
-    class="invoice flex py-7 px-4 transition-all duration-300 hover:shadow-lg focus:outline-primary lg:px-8"
+    class="invoice relative flex py-7 px-4 transition-all duration-300 hover:shadow-lg focus:outline-primary lg:px-8"
   >
     <div class="left flex">
       <span class="tracking-number text-xs lg:text-base"
@@ -21,7 +21,7 @@ defineProps(["invoice"]);
         >${{ parseFloat(invoice.invoiceTotal).toFixed(2) }}</span
       >
       <div
-        class="status-button flex gap-2 py-2 px-4 lg:mr-2 lg:px-8"
+        class="status-button absolute inset-0 flex gap-2 py-2 px-4 lg:static lg:mr-2 lg:px-8"
         :class="{
           paid: invoice.invoicePaid,
           draft: invoice.invoiceDraft,

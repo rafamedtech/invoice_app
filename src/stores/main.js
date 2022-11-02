@@ -57,6 +57,7 @@ export const useStore = defineStore("main", () => {
           paymentDueDateUnix: doc.data().paymentDueDateUnix,
           paymentDueDate: doc.data().paymentDueDate,
           condition: doc.data().condition,
+          paymentType: doc.data().paymentType,
           notes: doc.data().notes,
           featureType: doc.data().featureType,
           features: doc.data().features,

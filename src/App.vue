@@ -192,9 +192,12 @@ fetchUser();
     width: 10px;
     height: 10px;
     border-radius: 50%;
+    display: none;
     // margin-right: 8px;
   }
   @media (min-width: 900px) {
+    display: initial;
+    inset: initial;
     width: 10rem;
     justify-content: center;
   }

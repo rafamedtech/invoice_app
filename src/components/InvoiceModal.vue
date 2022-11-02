@@ -13,7 +13,7 @@ import LoadingSpinner from "@/components/LoadingSpinner.vue";
 const state = reactive({
   dateOptions: { year: "numeric", month: "short", day: "numeric" },
   docId: null,
-  invId: null,
+  invId: 10000,
   loading: null,
   clientCompany: null,
   clientName: null,
@@ -29,6 +29,7 @@ const state = reactive({
   exchangeCost: "",
   eta: "Inmediata",
   condition: "",
+  paymentType: "",
   notes: null,
   featureType: "texto",
   features: { text: "", image: null },
@@ -149,6 +150,7 @@ const uploadInvoice = async () => {
     paymentDueDate: state.paymentDueDate,
     paymentDueDateUnix: state.paymentDueDateUnix,
     condition: state.condition,
+    paymentType: state.paymentType,
     featureType: state.featureType,
     features: state.features,
     invoiceItemList: state.invoiceItemList,
@@ -194,6 +196,7 @@ const updateInvoice = async () => {
     paymentDueDate: state.paymentDueDate,
     paymentDueDateUnix: state.paymentDueDateUnix,
     condition: state.condition,
+    paymentType: state.paymentType,
     notes: state.notes,
     featureType: state.featureType,
     features: state.features,
@@ -248,6 +251,7 @@ if (editInvoice.value) {
   state.paymentDueDateUnix = currentInvoice.value.paymentDueDateUnix;
   state.paymentDueDate = currentInvoice.value.paymentDueDate;
   state.condition = currentInvoice.value.condition;
+  state.paymentType = currentInvoice.value.paymentType;
   state.notes = currentInvoice.value.notes;
   state.featureType = currentInvoice.value.featureType;
   state.features = currentInvoice.value.features;
@@ -403,7 +407,7 @@ watchEffect(() => {
         <!-- Invoice Work Details -->
         <!-- <div class="invoice-work grid grid-cols-2 lg:grid-cols-4"> -->
         <div class="invoice-work flex-column flex">
-          <div class="payment grid grid-cols-2 lg:grid-cols-4">
+          <div class="payment grid grid-cols-2 lg:grid-cols-3">
             <!-- <div class="payment flex"> -->
             <div class="flex-column flex">
               <label for="invoiceDate">Fecha</label>
@@ -454,16 +458,29 @@ watchEffect(() => {
                 <option value="refurbished">Refurbished</option>
               </select>
             </div>
+            <div class="flex flex-col">
+              <label for="paymentType">Forma de pago</label>
+              <select
+                v-model="state.paymentType"
+                class="focus:ring-primary"
+                required
+                name="paymentType"
+                id="paymentType"
+              >
+                <option value="nuevo">Contado</option>
+                <option value="usado">Crédito</option>
+              </select>
+            </div>
           </div>
 
           <div class="work-items mt-8">
             <h3 class="mb-4 text-primary">Artículos</h3>
             <table class="item-list">
               <tr class="table-heading flex">
-                <th class="item-id">ID</th>
+                <!-- <th class="item-id">ID</th> -->
+                <th class="price"># Parte</th>
                 <th class="item-name">Descripción</th>
                 <th class="qty">Ctd</th>
-                <th class="price"># Parte</th>
                 <th class="price">Precio</th>
                 <th class="total">Total</th>
               </tr>
@@ -473,11 +490,18 @@ watchEffect(() => {
                   v-for="(item, index) in state.invoiceItemList"
                   :key="index"
                 >
-                  <td class="item-id">
+                  <!-- <td class="item-id">
                     <input
                       class="rounded-[16px] border-none focus:ring-primary"
                       type="text"
                       v-model="item.id"
+                      />
+                    </td> -->
+                  <td class="price">
+                    <input
+                      class="focus:ring-primary"
+                      type="text"
+                      v-model="item.partNo"
                     />
                   </td>
                   <td class="item-name">
@@ -492,13 +516,6 @@ watchEffect(() => {
                       class="focus:ring-primary"
                       type="text"
                       v-model="item.qty"
-                    />
-                  </td>
-                  <td class="price">
-                    <input
-                      class="focus:ring-primary"
-                      type="text"
-                      v-model="item.partNo"
                     />
                   </td>
                   <td class="price">
@@ -584,7 +601,7 @@ watchEffect(() => {
                     accept="image/*"
                     @change="onUpload"
                   />
-                  <figure class="w-60">
+                  <figure class="h-full w-48">
                     <Transition name="feature" appear>
                       <img
                         class="w-full"

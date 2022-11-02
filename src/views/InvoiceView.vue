@@ -195,16 +195,17 @@ const generatePDF = () => {
         </div>
       </div>
     </div>
-
-    <figure
-      class="relative hidden print:flex print:h-[70vh] print:items-center"
+    <div
+      class="relative mb-8 hidden h-fit rounded-[20px] bg-white py-4 shadow-lg print:flex print:h-[90vh] print:items-center lg:print:h-screen lg:print:w-screen"
     >
       <h2
         class="absolute inset-0 top-8 mb-4 block text-center text-xl font-bold uppercase italic text-primary print:block"
       >
         Nuestras marcas
       </h2>
-      <img src="@/assets/images/covermvp.png" alt="" />
+      <figure class="h-full">
+        <img class="h-auto w-full" src="@/assets/images/covermvp.png" alt="" />
+      </figure>
       <div
         class="absolute inset-x-4 bottom-4 flex items-center justify-between text-[8px] lg:text-xs"
       >
@@ -217,7 +218,30 @@ const generatePDF = () => {
           <p>celular: (622) 118 6556</p>
         </div>
       </div>
-    </figure>
+    </div>
+
+    <!-- <figure
+      class="relative hidden print:flex print:h-[100vh] print:items-center"
+    >
+      <h2
+        class="absolute inset-0 top-8 mb-4 block text-center text-xl font-bold uppercase italic text-primary print:block"
+      >
+        Nuestras marcas
+      </h2>
+      <img class="h-auto w-full" src="@/assets/images/covermvp.png" alt="" />
+      <div
+        class="absolute inset-x-4 bottom-4 flex items-center justify-between text-[8px] lg:text-xs"
+      >
+        <div>
+          <p>cotizaciones@gcosoluciones.com</p>
+        </div>
+        <div>
+          <p>Lic. Orlando Toledo Virgen</p>
+          <p>orlando@gcosoluciones.com</p>
+          <p>celular: (622) 118 6556</p>
+        </div>
+      </div>
+    </figure> -->
 
     <!-- Invoice body -->
     <div id="pdf-content" class="w-full">
@@ -313,33 +337,35 @@ const generatePDF = () => {
         class="relative mt-4 max-h-[240px] min-h-[240px] overflow-x-auto rounded-[20px] bg-white shadow-lg"
       >
         <div
-          class="flex w-[150vw] justify-between gap-2 px-4 text-center text-[10px] print:w-full lg:w-full lg:justify-between lg:gap-2 lg:px-8"
+          class="flex w-[150vw] justify-between gap-2 px-4 text-[10px] print:w-full lg:w-full lg:justify-between lg:gap-2 lg:px-8"
         >
-          <h5 class="w-6 py-2 font-bold text-primary">ID</h5>
-          <div class="w-72 print:w-[25rem] lg:basis-7/12">
+          <!-- <h5 class="w-6 py-2 font-bold text-primary">ID</h5> -->
+          <h5 class="py-2 font-bold text-primary lg:basis-2/12">No parte</h5>
+          <div class="w-72 print:w-[25rem] lg:basis-6/12">
             <h5 class="w-full py-2 font-bold text-primary">Descripción</h5>
           </div>
-          <h5 class="py-2 font-bold text-primary lg:basis-1/12">Cantidad</h5>
-          <h5 class="py-2 font-bold text-primary lg:basis-1/12">No parte</h5>
-          <h5 class="py-2 font-bold text-primary lg:basis-1/12">
+          <h5 class="py-2 text-center font-bold text-primary lg:basis-1/12">
+            Cantidad
+          </h5>
+          <h5 class="py-2 text-center font-bold text-primary lg:basis-1/12">
             Precio unitario
           </h5>
-          <h5 class="w-12 py-2 font-bold text-primary">Importe</h5>
+          <h5 class="w-12 py-2 text-right font-bold text-primary">Importe</h5>
         </div>
         <div
-          class="flex w-[150vw] justify-between gap-2 px-4 text-center text-[10px] print:w-full lg:w-full lg:justify-between lg:gap-2 lg:px-8"
+          class="flex w-[150vw] justify-between gap-2 px-4 text-[10px] print:w-full lg:w-full lg:justify-between lg:gap-2 lg:px-8"
           v-for="(item, index) in currentInvoice.invoiceItemList"
           :key="index"
         >
-          <p class="w-6 py-2">{{ item.id }}</p>
-          <div class="w-72 print:w-[25rem] lg:basis-7/12">
+          <!-- <p class="w-6 py-2">{{ item.id }}</p> -->
+          <p class="py-2 lg:basis-2/12">{{ item.partNo }}</p>
+          <div class="w-72 print:w-[25rem] lg:basis-6/12">
             <p class="w-full py-2 text-left print:text-[8px]">
               {{ item.itemName }}
             </p>
           </div>
-          <p class="py-2 lg:basis-1/12">{{ item.qty }}</p>
-          <p class="py-2 lg:basis-1/12">{{ item.partNo }}</p>
-          <p class="py-2 lg:basis-1/12">
+          <p class="py-2 text-center lg:basis-1/12">{{ item.qty }}</p>
+          <p class="py-2 text-center lg:basis-1/12">
             ${{ parseFloat(item.price).toFixed(2) }}
           </p>
           <p class="w-12 py-2 text-right">
@@ -416,7 +442,7 @@ const generatePDF = () => {
     <section class="mt-8 lg:print:h-screen lg:print:w-screen">
       <img src="../assets/logo-bgremoved.png" class="mb-2 h-24" alt="" />
       <div
-        class="relative flex w-full flex-col items-center rounded-[20px] bg-white py-8 px-8 text-xs shadow-lg print:h-[70vh] print:max-h-[70vh] lg:h-[70vh] lg:text-base"
+        class="relative flex w-full flex-col items-center rounded-[20px] bg-white py-8 px-8 text-xs shadow-lg print:h-[60vh] print:max-h-[60vh] lg:h-[70vh] lg:text-base"
       >
         <h2
           class="inset-0 top-4 h-fit text-center text-xl font-bold uppercase italic text-primary print:block lg:block"
@@ -434,7 +460,7 @@ const generatePDF = () => {
                 :class="{
                   'print:h-auto print:w-1/2 lg:w-auto':
                     currentInvoice.features.text,
-                  'mx-auto print:w-1/2 lg:h-full lg:w-full':
+                  'mx-auto print:h-auto print:w-1/2 lg:h-full lg:w-full':
                     !currentInvoice.features.text,
                 }"
               >

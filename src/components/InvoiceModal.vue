@@ -1,6 +1,6 @@
 <script setup>
 // Dependencies imports
-import { reactive, ref, computed, watchEffect } from "vue";
+import { reactive, ref, computed, watchEffect, onMounted, watch } from "vue";
 import { useStore } from "@/stores/main";
 import { storeToRefs } from "pinia";
 import { uid } from "uid";
@@ -15,7 +15,7 @@ const state = reactive({
   docId: null,
   invId: 10000,
   loading: null,
-  clientCompany: null,
+  clientCompany: "",
   clientName: null,
   clientName2: null,
   clientEmail: null,
@@ -40,9 +40,52 @@ const state = reactive({
   ],
   invoiceSubtotal: 0,
 });
-const { editInvoice, currentInvoice } = storeToRefs(useStore());
+// const { editInvoice, currentInvoice } = storeToRefs(useStore());
+const { editInvoice, currentInvoice, contactData } = storeToRefs(useStore());
 const { editCurrentInvoice, updateCurrentInvoice, getInvoices, toggleModal } =
   useStore();
+
+// Contacts autocomplete
+const uniqueContacts = ref(
+  Array.from(new Set(contactData.value.map((a) => a.clientCompany))).map(
+    (clientCompany) => {
+      return contactData.value.find((a) => a.clientCompany === clientCompany);
+    }
+  )
+);
+
+const filteredContacts = ref([]);
+const contactsModal = ref(false);
+
+const filterContacts = () => {
+  if (state.clientCompany.length === 0) {
+    filteredContacts.value = uniqueContacts.value;
+  }
+
+  filteredContacts.value = uniqueContacts.value.filter((contact) => {
+    return contact.clientCompany
+      .toLowerCase()
+      .startsWith(state.clientCompany.toLowerCase());
+  });
+};
+
+onMounted(() => {
+  filterContacts();
+});
+
+watch(
+  () => state.clientCompany,
+  () => {
+    filterContacts();
+  }
+);
+
+const setContact = (contact) => {
+  state.clientCompany = contact.clientCompany;
+  state.clientName = contact.clientName;
+  state.clientEmail = contact.clientEmail;
+  contactsModal.value = false;
+};
 
 const invoiceTax = computed(() => {
   return state.invoiceSubtotal * 0.16;
@@ -282,7 +325,7 @@ watchEffect(() => {
     <Transition name="invoice">
       <form
         @submit.prevent="submitForm"
-        class="invoice-content w-screen px-4 pt-40 pb-14 lg:max-w-3xl lg:p-14"
+        class="invoice-content relative w-screen px-4 pt-40 pb-14 lg:max-w-3xl lg:p-14"
       >
         <LoadingSpinner v-show="state.loading" />
         <h1
@@ -311,15 +354,37 @@ watchEffect(() => {
               v-model="state.invId"
             />
           </div>
-          <div class="flex flex-col">
+          <div class="flex w-full flex-col">
             <label for="clientCompany">Empresa</label>
             <input
-              class="focus:ring-primary"
+              class="z-10 focus:ring-primary"
               required
               type="text"
               id="clientCompany"
               v-model="state.clientCompany"
+              @input="filterContacts"
+              @focus="contactsModal = true"
+              autocomplete="off"
             />
+            <div
+              v-if="filteredContacts && contactsModal"
+              class="absolute inset-0 z-0"
+              @click="contactsModal = false"
+            ></div>
+            <div v-if="filteredContacts && contactsModal" class="z-10">
+              <ul
+                class="absolute mt-2 flex w-4/5 flex-col gap-2 rounded-[10px] bg-white p-4 shadow-lg"
+              >
+                <li
+                  class="cursor-pointer transition-all hover:font-bold"
+                  v-for="filteredContact in filteredContacts"
+                  :key="filteredContact.id"
+                  @click="setContact(filteredContact)"
+                >
+                  {{ filteredContact.clientCompany }}
+                </li>
+              </ul>
+            </div>
           </div>
           <div class="flex w-full gap-8">
             <div class="mb-2 w-1/2">

@@ -18,6 +18,7 @@ export const useStore = defineStore("main", () => {
   const invoicesLoaded = ref(null);
   const currentInvoice = ref(null);
   const editInvoice = ref(null);
+  const contactData = ref([]);
   const user = ref(null);
 
   const customModal = ref(null);
@@ -69,6 +70,16 @@ export const useStore = defineStore("main", () => {
           invoiceDraft: doc.data().invoiceDraft,
           invoicePaid: doc.data().invoicePaid,
         };
+
+        const contact = {
+          clientCompany: doc.data().clientCompany,
+          clientName: doc.data().clientName,
+          clientName2: doc.data().clientName2,
+          clientEmail: doc.data().clientEmail,
+          clientEmail2: doc.data().clientEmail2,
+        };
+
+        contactData.value.push(contact);
         invoiceData.value.push(data);
       }
     });
@@ -195,6 +206,7 @@ export const useStore = defineStore("main", () => {
     invoiceDialog,
     modalActive,
     invoiceData,
+    contactData,
     invoicesLoaded,
     currentInvoice,
     editInvoice,

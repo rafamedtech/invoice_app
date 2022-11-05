@@ -298,7 +298,7 @@ const generatePDF = () => {
             Información del cliente
           </h2>
 
-          <ul class="grid grid-cols-4 px-4 text-[9px] lg:px-8">
+          <ul class="grid grid-cols-3 px-4 text-[9px] lg:grid-cols-5 lg:px-8">
             <li class="text-center">
               <h3
                 class="border-b border-black text-[9px] text-primary lg:text-base"
@@ -341,6 +341,16 @@ const generatePDF = () => {
               <p class="text-[8px] print:text-[8px] lg:text-xs">
                 {{ currentInvoice.exchangeCost ? "$" : ""
                 }}{{ currentInvoice.exchangeCost }}
+              </p>
+            </li>
+            <li class="text-center">
+              <h3
+                class="border-b border-black text-[9px] text-primary lg:text-base"
+              >
+                Forma de pago
+              </h3>
+              <p class="text-[8px] print:text-[8px] lg:text-xs">
+                {{ currentInvoice.paymentType }}
               </p>
             </li>
           </ul>

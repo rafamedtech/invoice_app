@@ -532,8 +532,8 @@ watchEffect(() => {
                 name="paymentType"
                 id="paymentType"
               >
-                <option value="nuevo">Contado</option>
-                <option value="usado">Crédito</option>
+                <option value="Contado">Contado</option>
+                <option value="Crédito">Crédito</option>
               </select>
             </div>
           </div>

@@ -46,6 +46,7 @@ const { editCurrentInvoice, updateCurrentInvoice, getInvoices, toggleModal } =
   useStore();
 
 // Contacts autocomplete
+
 const uniqueContacts = ref(
   Array.from(new Set(contactData.value.map((a) => a.clientCompany))).map(
     (clientCompany) => {
@@ -87,6 +88,8 @@ const setContact = (contact) => {
   contactsModal.value = false;
 };
 
+// Invoice processing
+
 const invoiceTax = computed(() => {
   return state.invoiceSubtotal * 0.16;
 });
@@ -113,7 +116,7 @@ const addNewInvoiceItem = () => {
   });
 };
 
-// Get image from input
+//// Get image from input
 const onUpload = async (e) => {
   const files = e.target.files;
   let filename = files[0].name;
@@ -135,7 +138,7 @@ const onUpload = async (e) => {
   state.features.image = urlDescarga;
 };
 
-// Open modal when click outside of modal
+//// Close modal when click outside
 const invoiceWrap = ref(null);
 const checkClick = (e) => {
   if (e.target === invoiceWrap.value) {
@@ -272,7 +275,7 @@ const submitForm = () => {
 if (!editInvoice.value) {
   state.invoiceDateUnix = Date.now();
   state.invoiceDate = new Date(state.invoiceDateUnix).toLocaleDateString(
-    "en-us",
+    "es-mx",
     state.dateOptions
   );
 }
@@ -310,7 +313,7 @@ watchEffect(() => {
     futureDate.getDate() + parseInt(state.paymentTerms)
   );
   state.paymentDueDate = new Date(state.paymentDueDateUnix).toLocaleDateString(
-    "en-us",
+    "es-mx",
     state.dateOptions
   );
 });
@@ -373,10 +376,10 @@ watchEffect(() => {
             ></div>
             <div v-if="filteredContacts && contactsModal" class="z-10">
               <ul
-                class="absolute mt-2 flex w-4/5 flex-col gap-2 rounded-[10px] bg-white p-4 shadow-lg"
+                class="min-h-12 absolute mt-2 flex max-h-[250px] w-4/5 flex-col gap-2 overflow-y-scroll rounded-[10px] bg-white p-4 shadow-lg"
               >
                 <li
-                  class="cursor-pointer transition-all hover:font-bold"
+                  class="cursor-pointer transition-all hover:font-bold hover:text-secondary"
                   v-for="filteredContact in filteredContacts"
                   :key="filteredContact.id"
                   @click="setContact(filteredContact)"
@@ -670,7 +673,7 @@ watchEffect(() => {
                   <figure class="h-full w-48">
                     <Transition name="feature" appear>
                       <img
-                        class="w-full"
+                        class="h-full"
                         :src="state.features.image"
                         alt=""
                         style="transition-delay: 0.3s"

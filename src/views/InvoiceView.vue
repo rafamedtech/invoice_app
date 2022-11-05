@@ -267,13 +267,17 @@ const generatePDF = () => {
             <span class="block text-xs font-bold text-primary"
               >GCO SOLUCIONES <span class="text-secondary">INDUSTRIALES</span>
             </span>
-            <a class="text-[10px]" href="https://www.gcosoluciones.com"
-              >www.gcosoluciones.com</a
-            >
-            <p class="w-[40ch] text-[6px] lg:w-[70ch]">
+            <p class="w-[40ch] text-[6px] print:w-[80ch] lg:w-[70ch]">
               SISTEMAS DE CONTROL ELÉCTRICO, ELECTRÓNICO, NEUMÁTICO,
               AUTOMATIZACIÓN, FILTRACIÓN, CONTROL DE FLAMA, PRESIÓN,
               TEMPERATURA, BOMBEO, TRATAMIENTO DE AGUA Y ALMACENAMIENTO
+            </p>
+            <a class="text-[10px]" href="https://www.gcosoluciones.com"
+              >www.gcosoluciones.com</a
+            >
+            <p class="text-[6px] leading-tight">ALMA PATRICIA GARCIA SOTELO</p>
+            <p class="text-[6px] leading-tight text-secondary">
+              RFC: GASA741127MJ4
             </p>
           </div>
           <h1
@@ -328,6 +332,16 @@ const generatePDF = () => {
               <h3
                 class="border-b border-black text-[9px] text-primary lg:text-base"
               >
+                Forma de pago
+              </h3>
+              <p class="text-[8px] print:text-[8px] lg:text-xs">
+                {{ currentInvoice.paymentType }}
+              </p>
+            </li>
+            <li class="text-center">
+              <h3
+                class="border-b border-black text-[9px] text-primary lg:text-base"
+              >
                 Moneda
               </h3>
               <p class="text-[8px] print:text-[8px] lg:text-xs">
@@ -343,16 +357,6 @@ const generatePDF = () => {
               <p class="text-[8px] print:text-[8px] lg:text-xs">
                 {{ currentInvoice.exchangeCost ? "$" : ""
                 }}{{ currentInvoice.exchangeCost }}
-              </p>
-            </li>
-            <li class="text-center">
-              <h3
-                class="border-b border-black text-[9px] text-primary lg:text-base"
-              >
-                Forma de pago
-              </h3>
-              <p class="text-[8px] print:text-[8px] lg:text-xs">
-                {{ currentInvoice.paymentType }}
               </p>
             </li>
           </ul>

@@ -298,7 +298,9 @@ const generatePDF = () => {
             Información del cliente
           </h2>
 
-          <ul class="grid grid-cols-3 px-4 text-[9px] lg:grid-cols-5 lg:px-8">
+          <ul
+            class="grid grid-cols-3 px-4 text-[9px] print:grid-cols-5 lg:grid-cols-5 lg:px-8"
+          >
             <li class="text-center">
               <h3
                 class="border-b border-black text-[9px] text-primary lg:text-base"

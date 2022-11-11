@@ -207,7 +207,7 @@ const generatePDF = () => {
     >
       <figure class="h-full">
         <img
-          class="mx-auto h-full w-auto rounded-[20px]"
+          class="h-auto w-full rounded-[20px]"
           src="@/assets/images/cover.jpg"
           alt="cover image"
         />

@@ -34,11 +34,21 @@ defineProps(["invoice"]);
           pending: invoice.invoicePending,
         }"
       >
-        <span class="hidden lg:block" v-if="invoice.invoicePaid">Vendido</span>
+        <span
+          class="hidden items-center gap-2 lg:flex"
+          v-if="invoice.invoicePaid"
+        >
+          <i class="fa-regular fa-circle-check text-base text-green-500"></i>
+          Vendido
+        </span>
         <span class="hidden lg:block" v-if="invoice.invoiceDraft"
           >Borrador</span
         >
-        <span class="hidden lg:block" v-if="invoice.invoicePending"
+        <span
+          class="hidden items-center gap-2 lg:flex"
+          v-if="invoice.invoicePending"
+        >
+          <i class="fa-solid fa-circle-exclamation text-base text-secondary"></i
           >Pendiente</span
         >
       </div>

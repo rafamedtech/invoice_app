@@ -38,7 +38,7 @@ const sendEmail = () => {
       {
         customer_name: currentInvoice.value.clientName.split(" ")[0],
         customer_name2: currentInvoice.value.clientName2
-          ? currentInvoice.value.clientName2.split(" ")[0]
+          ? `/${currentInvoice.value.clientName2.split(" ")[0]}`
           : "",
         customer_email: currentInvoice.value.clientEmail,
         customer_email2: currentInvoice.value.clientEmail2,
@@ -177,27 +177,19 @@ const generatePDF = () => {
     <!-- Cover -->
 
     <div
-      class="relative mb-8 h-fit rounded-[20px] bg-white py-4 shadow-lg print:hidden lg:print:h-screen lg:print:w-screen"
+      class="relative mb-8 h-fit rounded-[20px] bg-white shadow-lg print:hidden lg:print:h-screen lg:print:w-screen"
       :class="{ hidden: user }"
     >
-      <h2
-        class="absolute inset-0 top-8 mb-4 block text-center text-xl font-bold uppercase italic text-primary print:block"
-      >
-        Nuestras marcas
-      </h2>
       <picture>
-        <source
-          media="(max-width: 767px)"
-          srcset="@/assets/images/covermvppt.png"
-        />
+        <source media="(max-width: 767px)" srcset="@/assets/images/cover.jpg" />
         <img
-          src="@/assets/images/covermvp.png"
-          srcset="@/assets/images/covermvp.png"
+          src="@/assets/images/cover.jpg"
+          srcset="@/assets/images/cover.jpg"
           alt=""
           class="rounded-[20px]"
         />
       </picture>
-      <div
+      <!-- <div
         class="absolute inset-x-4 bottom-4 flex items-center justify-between text-[8px] lg:text-xs"
       >
         <div>
@@ -208,20 +200,19 @@ const generatePDF = () => {
           <p>orlando@gcosoluciones.com</p>
           <p>celular: (622) 118 6556</p>
         </div>
-      </div>
+      </div> -->
     </div>
     <div
-      class="relative mb-8 hidden h-fit rounded-[20px] bg-white py-4 shadow-lg print:flex print:h-[700px] print:items-center lg:print:h-screen lg:print:w-screen"
+      class="relative mb-8 hidden h-fit bg-white print:flex print:h-[700px] print:items-center print:justify-center"
     >
-      <h2
-        class="absolute inset-0 top-8 mb-4 block text-center text-xl font-bold uppercase italic text-primary print:block"
-      >
-        Nuestras marcas
-      </h2>
       <figure class="h-full">
-        <img class="h-auto w-full" src="@/assets/images/covermvp.png" alt="" />
+        <img
+          class="mx-auto h-full w-auto rounded-[20px]"
+          src="@/assets/images/cover.jpg"
+          alt="cover image"
+        />
       </figure>
-      <div
+      <!-- <div
         class="absolute inset-x-4 bottom-4 flex items-center justify-between text-[8px] lg:text-xs"
       >
         <div>
@@ -232,31 +223,8 @@ const generatePDF = () => {
           <p>orlando@gcosoluciones.com</p>
           <p>celular: (622) 118 6556</p>
         </div>
-      </div>
+      </div> -->
     </div>
-
-    <!-- <figure
-      class="relative hidden print:flex print:h-[100vh] print:items-center"
-    >
-      <h2
-        class="absolute inset-0 top-8 mb-4 block text-center text-xl font-bold uppercase italic text-primary print:block"
-      >
-        Nuestras marcas
-      </h2>
-      <img class="h-auto w-full" src="@/assets/images/covermvp.png" alt="" />
-      <div
-        class="absolute inset-x-4 bottom-4 flex items-center justify-between text-[8px] lg:text-xs"
-      >
-        <div>
-          <p>cotizaciones@gcosoluciones.com</p>
-        </div>
-        <div>
-          <p>Lic. Orlando Toledo Virgen</p>
-          <p>orlando@gcosoluciones.com</p>
-          <p>celular: (622) 118 6556</p>
-        </div>
-      </div>
-    </figure> -->
 
     <!-- Invoice body -->
     <div id="pdf-content" class="w-full">
@@ -468,7 +436,7 @@ const generatePDF = () => {
               Notas:
             </h3>
             <p
-              class="w-[50ch] text-[10px] uppercase italic print:w-full lg:w-[70ch]"
+              class="w-[50ch] overflow-hidden text-[10px] uppercase italic print:w-full lg:w-[70ch]"
             >
               {{ currentInvoice.notes }}
             </p>

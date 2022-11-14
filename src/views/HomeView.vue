@@ -113,7 +113,10 @@ getInvoices();
       <div v-else class="empty flex-column flex">
         <img src="@/assets/images/illustration-empty.svg" alt="" />
         <h3>No hay cotizaciones</h3>
-        <p>Crea una nueva cotización haciendo click en el botón +Cotización</p>
+        <p>
+          Crea una nueva cotización haciendo click en el botón
+          <span class="text-primary">+Cotización</span>
+        </p>
       </div>
     </div>
     <!-- <div v-else>

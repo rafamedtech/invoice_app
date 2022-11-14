@@ -41,7 +41,9 @@ const state = reactive({
   invoiceSubtotal: 0,
 });
 // const { editInvoice, currentInvoice } = storeToRefs(useStore());
-const { editInvoice, currentInvoice, contactData } = storeToRefs(useStore());
+const { user, editInvoice, currentInvoice, contactData } = storeToRefs(
+  useStore()
+);
 const { editCurrentInvoice, updateCurrentInvoice, getInvoices, toggleModal } =
   useStore();
 
@@ -181,6 +183,7 @@ const uploadInvoice = async () => {
   await addDoc(collection(db, "invoices"), {
     invoiceId: uid(6),
     invId: state.invId,
+    createdBy: user.value.email,
     clientCompany: state.clientCompany,
     clientName: state.clientName,
     clientName2: state.clientName2,

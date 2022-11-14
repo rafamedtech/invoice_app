@@ -43,6 +43,7 @@ export const useStore = defineStore("main", () => {
         const data = {
           docId: doc.id,
           invId: doc.data().invId,
+          createdBy: doc.data().createdBy,
           invoiceId: doc.data().invoiceId,
           clientCompany: doc.data().clientCompany,
           clientName: doc.data().clientName,

@@ -16,6 +16,8 @@ const {
   updateStatusToPending,
 } = useStore();
 
+console.log(user.value);
+
 const toggleEditInvoice = () => {
   editCurrentInvoice();
   toggleInvoice();
@@ -33,7 +35,7 @@ setCurrentInvoice(params.invoiceId);
 const sendEmail = () => {
   emailjs
     .send(
-      "gco",
+      "service_f9i8wgp",
       "template_gw5kvf9",
       {
         customer_name: currentInvoice.value.clientName.split(" ")[0],
@@ -399,29 +401,21 @@ const generatePDF = () => {
             }}
           </p>
         </div>
-        <!-- <div class="absolute bottom-4 flex w-full justify-end gap-4 px-4">
-          <h5 class="text-left text-xs font-bold text-primary">
-            Tiempo de entrega
-          </h5>
-          <p class="text-center text-xs italic">
-            {{ currentInvoice.eta }}
-          </p>
-        </div> -->
       </section>
 
       <!-- Terms and total sections -->
       <section
-        class="flex w-full flex-col-reverse gap-4 py-4 print:flex-row lg:flex-row"
+        class="flex max-h-40 w-full flex-col-reverse gap-4 overflow-y-hidden py-4 print:flex-row lg:flex-row"
       >
         <section
-          class="flex w-full flex-col gap-4 rounded-[20px] bg-white px-6 py-4 shadow-lg print:w-3/5 print:basis-4/5 print:flex-row print:pr-0 lg:w-4/5 lg:flex-row"
+          class="flex w-full flex-col gap-4 overflow-y-hidden rounded-[20px] bg-white px-6 py-4 shadow-lg print:w-3/5 print:basis-4/5 print:flex-row print:pr-0 lg:w-4/5 lg:flex-row"
         >
-          <div class="print:w-3/5 lg:w-1/2">
+          <div class="overflow-y-hidden print:w-3/5 lg:w-1/2">
             <h3 class="mb-2 w-fit border-b-2 border-primary text-[#1a1a1a]">
               Condiciones del servicio
             </h3>
             <p
-              class="w-[50ch] text-[8px] italic print:w-full print:text-[8px] lg:w-[80ch]"
+              class="w-[50ch] text-[8px] italic print:w-full print:text-[6px] lg:w-[80ch]"
             >
               AGRADECIENDO SU AMABLE PREFERENCIA NOS ES GRATO SOMETER A SU
               CONSIDERACION NUESTRA COTIZACION DE ACUERDO A SU REQUERIMIENTO,
@@ -436,7 +430,7 @@ const generatePDF = () => {
               Notas:
             </h3>
             <p
-              class="w-[50ch] overflow-hidden text-[10px] uppercase italic print:w-full lg:w-[70ch]"
+              class="h-12 w-[50ch] overflow-hidden text-[8px] uppercase italic print:w-full print:text-[6px] lg:w-[80ch]"
             >
               {{ currentInvoice.notes }}
             </p>

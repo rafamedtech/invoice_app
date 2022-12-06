@@ -191,18 +191,6 @@ const generatePDF = () => {
           class="rounded-[20px]"
         />
       </picture>
-      <!-- <div
-        class="absolute inset-x-4 bottom-4 flex items-center justify-between text-[8px] lg:text-xs"
-      >
-        <div>
-          <p>cotizaciones@gcosoluciones.com</p>
-        </div>
-        <div>
-          <p>Lic. Orlando Toledo Virgen</p>
-          <p>orlando@gcosoluciones.com</p>
-          <p>celular: (622) 118 6556</p>
-        </div>
-      </div> -->
     </div>
     <div
       class="relative mb-8 hidden h-fit bg-white print:flex print:h-[700px] print:items-center print:justify-center"
@@ -214,18 +202,6 @@ const generatePDF = () => {
           alt="cover image"
         />
       </figure>
-      <!-- <div
-        class="absolute inset-x-4 bottom-4 flex items-center justify-between text-[8px] lg:text-xs"
-      >
-        <div>
-          <p>cotizaciones@gcosoluciones.com</p>
-        </div>
-        <div>
-          <p>Lic. Orlando Toledo Virgen</p>
-          <p>orlando@gcosoluciones.com</p>
-          <p>celular: (622) 118 6556</p>
-        </div>
-      </div> -->
     </div>
 
     <!-- Invoice body -->
@@ -263,6 +239,11 @@ const generatePDF = () => {
 
             <h3 class="text-[9px] text-primary lg:text-base">Vigencia</h3>
             <p class="text-[10px]">{{ currentInvoice.paymentDueDate }}</p>
+
+            <h3 class="text-[9px] text-primary lg:text-base">
+              Tiempo de entrega
+            </h3>
+            <p class="text-[10px]">{{ currentInvoice.eta }}</p>
           </div>
         </section>
 

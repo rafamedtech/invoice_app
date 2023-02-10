@@ -16,7 +16,7 @@ const {
   updateStatusToPending,
 } = useStore();
 
-console.log(user.value);
+// console.log(user.value);
 
 const toggleEditInvoice = () => {
   editCurrentInvoice();
@@ -35,7 +35,7 @@ setCurrentInvoice(params.invoiceId);
 const sendEmail = () => {
   emailjs
     .send(
-      "service_f9i8wgp",
+      "service_tyiaa8g",
       "template_gw5kvf9",
       {
         customer_name: currentInvoice.value.clientName.split(" ")[0],

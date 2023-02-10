@@ -71,9 +71,9 @@ const sendEmail = () => {
   // const tempA = /*html*/ encodeURI(
   //   `<a href="${location.toString()}">Abrir Cotización</a>`
   // );
-  const tempBody = `Hola ${currentInvoice.value.clientName.split(" ")[0]}${
+  const tempBody = `Hola ${currentInvoice.value.clientName}${
     currentInvoice.value.clientName2 ? "/" : ""
-  }${currentInvoice.value.clientName2.split(" ")[0]},
+  }${currentInvoice.value.clientName2},
 
 Tu cotización se encuentra disponible dando click en el siguiente enlace:
 
@@ -87,6 +87,17 @@ GCO Soluciones Industriales`;
   const body = encodeURI(tempBody);
 
   const subject = "Tu cotización de GCO Soluciones Industriales esta lista!";
+
+  setTimeout(() => {
+    // useStore().$patch({
+    //   customModal: true,
+    //   modalType: "email",
+    // });
+    if (currentInvoice.value.invoiceDraft) {
+      updateStatusToPending(currentInvoice.value.docId);
+    }
+  }, 1000);
+
   window.open(
     `mailto:${currentInvoice.value.clientEmail}, ${currentInvoice.value?.clientEmail2}?subject=${subject}&bcc='orlando@gcosoluciones.com'&body=${body}`
   );

@@ -3,7 +3,7 @@
 import { useStore } from "@/stores/main";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
-// import emailjs from "@emailjs/browser";
+import emailjs from "@emailjs/browser";
 
 // Definitions
 const { params } = useRoute();
@@ -32,85 +32,83 @@ const deleteInvoice = () => {
 
 setCurrentInvoice(params.invoiceId);
 
-// const sendEmail = () => {
-//   emailjs
-//     .send(
-//       "service_tyiaa8g",
-//       "template_gw5kvf9",
-//       {
-//         customer_name: currentInvoice.value.clientName.split(" ")[0],
-//         customer_name2: currentInvoice.value.clientName2
-//           ? `/${currentInvoice.value.clientName2.split(" ")[0]}`
-//           : "",
-//         customer_email: currentInvoice.value.clientEmail,
-//         customer_email2: currentInvoice.value.clientEmail2,
-//         message: location.toString(),
-//       },
-//       "QyWKNAO42Ukv7v_0T"
-//     )
-//     .then(
-//       (result) => {
-//         console.log("SUCCESS!", result.text);
-//       },
-//       (error) => {
-//         console.log("FAILED...", error.text);
-//       }
-//     );
-
-//   setTimeout(() => {
-//     useStore().$patch({
-//       customModal: true,
-//       modalType: "email",
-//     });
-//     if (currentInvoice.value.invoiceDraft) {
-//       updateStatusToPending(currentInvoice.value.docId);
-//     }
-//   }, 1000);
-// };
 const sendEmail = () => {
-  // const tempA = /*html*/ encodeURI(
-  //   `<a href="${location.toString()}">Abrir Cotización</a>`
-  // );
-  const tempBody = `Hola ${currentInvoice.value.clientName}${
-    currentInvoice.value.clientName2 ? "/" : ""
-  }${currentInvoice.value.clientName2},
-
-Tu cotización se encuentra disponible dando click en el siguiente enlace:
-
-
-${location.toString()}
-
-
-Quedo a sus órdenes,
-GCO Soluciones Industriales`;
-
-  const body = encodeURI(tempBody);
-
-  const subject = "Tu cotización de GCO Soluciones Industriales esta lista!";
+  emailjs
+    .send(
+      "service_tyiaa8g",
+      "template_gw5kvf9",
+      {
+        customer_name: currentInvoice.value.clientName.split(" ")[0],
+        customer_name2: currentInvoice.value.clientName2
+          ? `/${currentInvoice.value.clientName2.split(" ")[0]}`
+          : "",
+        customer_email: currentInvoice.value.clientEmail,
+        customer_email2: currentInvoice.value.clientEmail2,
+        message: location.toString(),
+      },
+      "QyWKNAO42Ukv7v_0T"
+    )
+    .then(
+      (result) => {
+        console.log("SUCCESS!", result.text);
+      },
+      (error) => {
+        console.log("FAILED...", error.text);
+      }
+    );
 
   setTimeout(() => {
-    // useStore().$patch({
-    //   customModal: true,
-    //   modalType: "email",
-    // });
+    useStore().$patch({
+      customModal: true,
+      modalType: "email",
+    });
     if (currentInvoice.value.invoiceDraft) {
       updateStatusToPending(currentInvoice.value.docId);
     }
   }, 1000);
-
-  window.open(
-    `mailto:${currentInvoice.value.clientEmail}, ${currentInvoice.value?.clientEmail2}?subject=${subject}&bcc='orlando@gcosoluciones.com'&body=${body}`
-  );
-  // Email.send({
-  //   Host: "gcosoluciones.com",
-  //   Username: "no-reply@gcosoluciones.com",
-  //   Password: "RafaEL2022_eLL0q1ll0",
-  //   To: currentInvoice.value.clientEmail,
-  //   From: "no-reply@gcosoluciones.com",
-  //   Subject: "This is the subject",
-  //   Body: "And this is the body",
-  // }).then((message) => alert(message));
 };
+// const sendEmail = () => {
+//   // const tempA = /*html*/ encodeURI(
+//   //   `<a href="${location.toString()}">Abrir Cotización</a>`
+//   // );
+//   const tempBody = `Hola ${currentInvoice.value.clientName}${
+//     currentInvoice.value.clientName2 ? "/" : ""
+//   }${currentInvoice.value.clientName2},
+
+// Tu cotización se encuentra disponible dando click en el siguiente enlace:
+
+// ${location.toString()}
+
+// Quedo a sus órdenes,
+// GCO Soluciones Industriales`;
+
+//   const body = encodeURI(tempBody);
+
+//   const subject = "Tu cotización de GCO Soluciones Industriales esta lista!";
+
+//   setTimeout(() => {
+//     // useStore().$patch({
+//     //   customModal: true,
+//     //   modalType: "email",
+//     // });
+//     if (currentInvoice.value.invoiceDraft) {
+//       updateStatusToPending(currentInvoice.value.docId);
+//     }
+//   }, 1000);
+
+//   window.open(
+//     `mailto:${currentInvoice.value.clientEmail}, ${currentInvoice.value?.clientEmail2}?subject=${subject}&bcc='orlando@gcosoluciones.com'&body=${body}`
+//   );
+// Email.send({
+//   Host: "gcosoluciones.com",
+//   Username: "no-reply@gcosoluciones.com",
+//   Password: "RafaEL2022_eLL0q1ll0",
+//   To: currentInvoice.value.clientEmail,
+//   From: "no-reply@gcosoluciones.com",
+//   Subject: "This is the subject",
+//   Body: "And this is the body",
+// }).then((message) => alert(message));
+// };
 
 const generatePDF = () => {
   useStore().$patch({
